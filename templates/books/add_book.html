@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Book - MyCashBook</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+    /* Reset & Variables */
+    :root {
+        --primary-color: #5d54a4; /* Deep Violet */
+        --secondary-color: #ff9b86; /* Soft Coral Accent */
+        --input-bg: #f9f9fb;
+        --input-border: #e0e0e0;
+        --input-focus: #5d54a4;
+        --button-bg: linear-gradient(135deg, #764ba2, #667eea);
+        --button-hover: linear-gradient(135deg, #667eea, #764ba2);
+        --text-color: #2c3e50;
+        --success-color: #2ecc71;
+    }
+    * {
+        margin: 0; padding: 0; box-sizing: border-box;
+        font-family: 'Inter', sans-serif; /* Changed Font */
+    }
+    body {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        background-size: 400% 400%; /* Increased size for smoother animation */
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column; /* To allow for the back link outside the main form */
+        justify-content: center;
+        align-items: center;
+        animation: gradientBG 20s ease infinite; /* Smoother, longer animation */
+        padding: 40px 20px;
+    }
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* Form Container */
+    .form-container {
+        background: #fff;
+        padding: 40px;
+        border-radius: 20px; /* Softer edges */
+        box-shadow: 0 30px 60px rgba(0,0,0,0.25); /* Deeper shadow */
+        width: 450px; /* Slightly wider */
+        max-width: 90%;
+        animation: slideDown 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Snappier animation */
+        border: 1px solid #f0f0f0;
+    }
+    @keyframes slideDown {
+        0% { transform: translateY(-70px); opacity: 0; }
+        100% { transform: translateY(0); opacity: 1; }
+    }
+    h2 {
+        color: var(--text-color);
+        margin-bottom: 35px;
+        text-align: center;
+        font-weight: 700;
+        font-size: 26px;
+    }
+    .header-icon {
+        color: var(--secondary-color);
+        margin-right: 10px;
+    }
+
+    /* Form Fields */
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px; /* More spacing */
+    }
+    .input-group {
+        position: relative;
+    }
+    label {
+        display: block;
+        font-size: 0.85rem;
+        color: var(--primary-color);
+        font-weight: 600;
+        margin-bottom: 8px;
+        transition: 0.3s;
+    }
+    .input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+    .field-icon {
+        position: absolute;
+        left: 15px;
+        color: #a0aec0;
+        font-size: 16px;
+    }
+    input, textarea {
+        width: 100%;
+        padding: 14px 15px 14px 45px; /* Added padding for icon */
+        border-radius: 12px; /* Softer radius */
+        border: 1px solid var(--input-border);
+        background: var(--input-bg);
+        font-size: 15px;
+        transition: all 0.3s ease;
+        resize: none;
+    }
+    textarea {
+        padding: 14px 15px; /* No icon in textarea */
+        min-height: 90px;
+    }
+    input:focus, textarea:focus {
+        border-color: var(--input-focus);
+        box-shadow: 0 0 0 4px rgba(93,84,164,0.15); /* Modern focus ring */
+        outline: none;
+        background: #fff;
+    }
+
+    /* Button */
+    .save-button {
+        padding: 16px;
+        border-radius: 12px;
+        border: none;
+        background: var(--button-bg);
+        background-size: 200% auto; /* For gradient animation */
+        color: #fff;
+        font-size: 18px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        box-shadow: 0 8px 20px rgba(118,75,162,0.4);
+        margin-top: 10px;
+    }
+    .save-button:hover {
+        background-position: right center; /* Gradient shift */
+        transform: translateY(-2px); /* Lift slightly instead of full scale */
+        box-shadow: 0 10px 25px rgba(118,75,162,0.5);
+    }
+    .save-button:active {
+        transform: scale(0.98);
+        transition: 0.1s;
+    }
+
+    /* Back Link */
+    .back-link {
+        display: inline-block;
+        margin-top: 30px;
+        text-decoration: none;
+        color: #fff; /* White text on dark background */
+        background: rgba(255, 255, 255, 0.15);
+        padding: 10px 15px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+    .back-link:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+    }
+
+    /* Message Styling (for Django Messages) */
+    .message-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        min-width: 300px;
+    }
+    .message-card {
+        padding: 15px 20px;
+        border-radius: 10px;
+        color: white;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        margin-bottom: 10px;
+        background: var(--success-color); /* Default to success color */
+        opacity: 0;
+        transform: translateX(40px);
+        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .message-card.error {
+        background: #e74c3c;
+    }
+    .message-card.show {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+</style>
+</head>
+<body>
+
+<div class="message-container">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message-card {% if message.tags == 'error' %}error{% endif %}">
+                <p>{{ message }}</p>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
+
+<div class="form-container">
+    <h2><i class="fas fa-book-open header-icon"></i> Add a New Book</h2>
+
+    <form method="POST" id="addBookForm">
+        {% csrf_token %}
+        
+        <div class="input-group">
+            <label for="name">Book Name</label>
+            <div class="input-wrapper">
+                <i class="fas fa-file-signature field-icon"></i>
+                <input type="text" name="name" id="name" placeholder="Enter book name (e.g., Household Expenses)" required>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="description">Description (Optional)</label>
+            <textarea name="description" id="description" rows="3" placeholder="Briefly describe the book's purpose (e.g., My 2024 budget tracking)"></textarea>
+        </div>
+
+        <button type="submit" class="save-button">
+            <i class="fas fa-save"></i> Save Book
+        </button>
+    </form>
+
+</div>
+
+<a class="back-link" href="{% url 'dashboard' %}">⬅ Back to Dashboard</a>
+
+<script>
+    // --- Message Animation Script (for Django Messages) ---
+    const messageCards = document.querySelectorAll('.message-card');
+    
+    if (messageCards.length > 0) {
+        messageCards.forEach((msg, index) => {
+            // 1. Show the message with a slight delay
+            setTimeout(() => {
+                msg.classList.add('show');
+            }, 100 + (index * 200)); 
+
+            // 2. Hide and remove the message after the display time
+            setTimeout(() => {
+                msg.style.opacity = '0';
+                msg.style.transform = 'translateX(40px)';
+                setTimeout(() => msg.remove(), 600);
+            }, 5000 + (index * 200)); 
+        });
+    }
+
+    // --- Button Loading/Squish Animation Script (Optional: For AJAX/Form Submission Delay) ---
+    const saveButton = document.querySelector('.save-button');
+    const form = document.getElementById('addBookForm');
+    
+    saveButton.addEventListener('click', function(e) {
+        // Only proceed if the form is valid (browser validation)
+        if (form.checkValidity()) {
+            // Prevent immediate submission to show the press animation
+            e.preventDefault(); 
+
+            // Add the squish/press effect
+            this.classList.add('submitting');
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            
+            // Revert back to the original style after a short delay (simulating network time)
+            setTimeout(() => {
+                // If you were using AJAX, you would submit the form data here.
+                // Since this is a standard Django form, we submit it directly after the delay.
+                form.submit();
+            }, 800); 
+        }
+    });
+</script>
+
+</body>
+</html>

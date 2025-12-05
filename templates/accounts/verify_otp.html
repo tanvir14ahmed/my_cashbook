@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verify OTP - MyCashBook</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+    /* Reset and Base Styles */
+    * { 
+        margin: 0; 
+        padding: 0; 
+        box-sizing: border-box; 
+        font-family: 'Inter', sans-serif; /* Changed to Inter */
+    }
+
+    /* Variables for Theming */
+    :root {
+        --brand-blue: #00c6ff;
+        --brand-purple: #4e4376;
+        --brand-dark: #2b5876;
+        --text-dark: #2c3e50;
+        --text-light: #fafafa;
+        --card-bg-opacity: 0.95;
+        --card-blur: 12px; /* Increased blur */
+        --success-color: #1abc9c;
+        --error-color: #e74c3c;
+    }
+
+    /* Dynamic Background (Consistent with Signup/Login) */
+    body {
+        display: flex;
+        flex-direction: column; /* Added flex column for header */
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        /* Updated to the animated gradient from your other pages */
+        background: linear-gradient(90deg, #4f7174, #c7edfb, #f9c7f4, #ecb8c9, #fffc3b);
+        background-size: 300% 300%;
+        animation: gradientShift 35s ease-in-out infinite; 
+        color: var(--text-dark);
+        padding: 20px;
+    }
+
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* Brand Header (Added for consistency) */
+    .brand-header {
+        text-align: center;
+        margin-bottom: 30px;
+        animation: fadeInDown 1s ease-out;
+    }
+
+    .brand-header h1 {
+        font-size: 50px;
+        background: linear-gradient(90deg, var(--brand-dark), var(--brand-purple), var(--brand-blue));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 800;
+        letter-spacing: 2px;
+        text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        margin-bottom: 5px;
+    }
+    
+    .brand-header p {
+        font-size: 16px;
+        color: var(--text-dark); 
+        text-shadow: 0 1px 4px rgba(255,255,255,0.4);
+        font-weight: 500;
+    }
+    
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    /* End Brand Header */
+
+    .card {
+        background: rgba(255, 255, 255, var(--card-bg-opacity));
+        backdrop-filter: blur(var(--card-blur));
+        padding: 40px;
+        border-radius: 20px; /* Softer radius */
+        box-shadow: 0 25px 50px rgba(0,0,0,0.3); /* Deeper shadow */
+        text-align: center;
+        width: 100%;
+        max-width: 400px;
+        animation: fadeInUp 1.2s ease; /* Adjusted animation name */
+        border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+    
+    @keyframes fadeInUp {
+        from { transform: translateY(50px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    h2 {
+        margin-bottom: 10px;
+        color: var(--text-dark);
+        font-size: 28px;
+        font-weight: 700;
+    }
+
+    .instruction { /* New class for instruction text */
+        margin-bottom: 25px;
+        font-size: 15px;
+        color: #666;
+    }
+
+    input[type="text"] {
+        width: 150px; /* Slightly wider input */
+        padding: 16px 18px;
+        margin: 15px 0 30px 0;
+        border-radius: 12px; /* Softer radius */
+        border: 1px solid #e0e0e0;
+        font-size: 24px; /* Larger text for OTP */
+        text-align: center;
+        transition: all 0.3s ease;
+        letter-spacing: 8px;
+        background: #f7f7f7;
+    }
+
+    input:focus {
+        border-color: var(--brand-blue);
+        box-shadow: 0 0 0 4px rgba(0,198,255,0.2);
+        outline: none;
+        background: var(--text-light);
+        animation: none; /* Remove bounce */
+    }
+
+    /* -------------------------- */
+    /* Button Styling - Re-created for consistency */
+    /* -------------------------- */
+    .action-btn { /* Base class for all buttons */
+        width: 100%;
+        padding: 16px;
+        margin-bottom: 15px;
+        border: none;
+        border-radius: 12px;
+        color: white;
+        font-size: 19px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        /* Flexbox for centering loader/text */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Verify Button (Submit) */
+    .verify-btn {
+        background: linear-gradient(45deg, var(--brand-dark), var(--brand-purple), var(--brand-blue));
+        background-size: 200% 200%;
+    }
+
+    .verify-btn:hover:not(.loading) {
+        background-position: 100% 0%;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+    
+    .verify-btn:active:not(.loading) {
+        transform: scale(0.98); 
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        transition: all 0.1s ease-out;
+    }
+
+    /* Resend Button */
+    .resend-btn {
+        background-color: #95a5a6;
+        font-weight: 500;
+        box-shadow: none;
+        padding: 14px; /* Slightly smaller for secondary action */
+    }
+
+    .resend-btn.enabled {
+        background-color: var(--brand-purple); /* Enabled uses brand color */
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        animation: popResend 0.5s ease forwards;
+    }
+
+    .resend-btn.enabled:hover {
+        background-color: var(--brand-dark);
+        transform: scale(1.02);
+    }
+
+    @keyframes popResend {
+        0% { transform: scale(0.8); opacity: 0.8; }
+        50% { transform: scale(1.05); opacity: 1; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Loader Animation */
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .loader {
+        display: inline-block;
+        margin-left: 10px;
+        width: 1.2em;
+        height: 1.2em;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        visibility: hidden;
+    }
+
+    .verify-btn.loading {
+        pointer-events: none;
+        background-position: 100% 0%; 
+        opacity: 0.8;
+    }
+
+    .verify-btn.loading .button-text {
+        margin-right: 10px;
+    }
+
+    .verify-btn.loading .loader {
+        visibility: visible;
+    }
+    /* -------------------------- */
+    
+    /* Message Cards */
+    #messageContainer {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 320px;
+    }
+
+    .message-card {
+        padding: 16px 22px;
+        border-radius: 12px;
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        text-align: center;
+        box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+        opacity: 0;
+        transform: translateX(40px);
+        transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease;
+    }
+
+    .message-card.success { background-color: var(--success-color); }
+    .message-card.error { background-color: var(--error-color); }
+    .message-card.info { background-color: #3498db; }
+    
+    /* Use 'show' class to trigger the entry animation */
+    .message-card.show {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+        body { padding: 15px; }
+        .brand-header { margin-bottom: 20px; }
+        .brand-header h1 { font-size: 40px; }
+        .card { padding: 30px 25px; border-radius: 16px; }
+        h2 { font-size: 24px; }
+        .instruction { font-size: 14px; margin-bottom: 25px; }
+        input[type="text"] { padding: 14px 16px; font-size: 20px; margin-bottom: 20px; }
+        .action-btn { padding: 14px; font-size: 18px; }
+        #messageContainer { right: 10px; top: 10px; }
+    }
+</style>
+</head>
+<body>
+
+<div class="brand-header">
+    <h1>MyCashBook</h1>
+    <p>🔑 Secure Account Verification</p>
+</div>
+
+<div class="card">
+    <h2>Email Verification</h2>
+    <p class="instruction">Enter the 4-digit code sent to your registered email address.</p>
+
+    <form method="POST" id="verifyForm">
+        {% csrf_token %}
+        <input type="text" name="otp" placeholder="- - - -" maxlength="4" required inputmode="numeric" pattern="[0-9]{4}">
+        <button type="submit" class="action-btn verify-btn" id="verifyButton">
+            <span class="button-text">Verify Code</span>
+            <span class="loader"></span>
+        </button>
+    </form>
+
+    <form action="{% url 'resend_otp' %}" method="POST">
+        {% csrf_token %}
+        <button type="submit" id="resendBtn" class="action-btn resend-btn" disabled>Resend OTP (40s)</button>
+    </form>
+</div>
+
+<div id="messageContainer">
+    {% if messages %}
+        {% for message in messages %}
+        <div class="message-card {% if message.tags == 'success' %}success{% elif message.tags == 'error' %}error{% else %}info{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+</div>
+
+<script>
+    const verifyForm = document.getElementById('verifyForm');
+    const verifyButton = document.getElementById('verifyButton');
+    const resendBtn = document.getElementById('resendBtn');
+    const messagesCard = document.querySelectorAll('.message-card');
+
+    // Message Card Animation Logic (Updated to use 'show' class)
+    messagesCard.forEach(msg => {
+        // 1. Show the message with the animation effect
+        setTimeout(() => {
+            msg.classList.add('show');
+        }, 50); 
+
+        // 2. Hide and remove the message after the display time
+        setTimeout(() => {
+            msg.style.opacity = '0';
+            msg.style.transform = 'translateX(50px)';
+            setTimeout(() => msg.remove(), 800);
+        }, 4000); // Increased display time for clarity (4s)
+    });
+
+    // Button Press Animation Logic (Verify Button)
+    verifyButton.addEventListener('click', function(e) {
+        if (verifyForm.checkValidity()) {
+            e.preventDefault(); 
+            this.classList.add('loading');
+            this.querySelector('.button-text').textContent = 'Processing...';
+
+            // Submit the form after a short delay
+            setTimeout(() => {
+                verifyForm.submit();
+            }, 1500); 
+        }
+    });
+
+    // Resend OTP Timer Logic (Your original logic, slightly modified)
+    let timer = 40;
+    let interval = setInterval(() => {
+        timer--;
+        resendBtn.textContent = `Resend OTP (${timer}s)`;
+        if(timer <= 0){
+            clearInterval(interval);
+            resendBtn.textContent = "Resend OTP";
+            resendBtn.disabled = false;
+            resendBtn.classList.add('enabled');
+        }
+    }, 1000);
+
+    // Page refresh warning (Modified to use the common message card logic)
+    window.onload = () => {
+        // Check if a message already exists on load to avoid overlap
+        if(messagesCard.length === 0) {
+            const refreshAlert = document.createElement('div');
+            refreshAlert.className = 'message-card info';
+            refreshAlert.innerHTML = "<p>Do not refresh the page! OTP delivery may take 30 seconds.</p>";
+            
+            const messageContainer = document.getElementById('messageContainer');
+            if(messageContainer) {
+                messageContainer.appendChild(refreshAlert);
+                
+                // Show/Hide logic for the dynamically created message
+                setTimeout(() => {
+                    refreshAlert.classList.add('show');
+                }, 50);
+
+                setTimeout(() => {
+                    refreshAlert.style.opacity = '0';
+                    refreshAlert.style.transform = 'translateX(50px)';
+                    setTimeout(() => refreshAlert.remove(), 800);
+                }, 4000);
+            }
+        }
+    };
+</script>
+
+</body>
+</html>

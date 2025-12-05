@@ -1,0 +1,263 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify OTP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* General Setup and Variables (Matching Forgot Password Page) */
+        :root {
+            --primary-color: #4A90E2; /* Modern Blue */
+            --primary-hover: #3A7BC8;
+            --background-start: #E0F7FA; /* Light Teal/Cyan */
+            --background-end: #C8E6C9; /* Light Green */
+            --card-background: #FFFFFF;
+            --text-color: #333333;
+            --placeholder-color: #AAAAAA;
+            --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.08);
+            --shadow-card: 0 12px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--background-start), var(--background-end));
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--card-background);
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-card);
+            text-align: center;
+            animation: fadeSlide 0.7s ease-out;
+            box-sizing: border-box;
+        }
+
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            margin-bottom: 25px;
+            font-size: 30px;
+            color: var(--text-color);
+            font-weight: 700;
+        }
+
+        /* Form Description Text */
+        .description-text {
+            color: #6A6A6A;
+            font-size: 15px;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        /* Input Field Styles (Specific for OTP) */
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0 20px;
+            border-radius: 12px;
+            border: 1px solid #E0E0E0;
+            font-size: 22px; /* Larger font size for OTP digits */
+            font-weight: 700; /* Bolder font for emphasis */
+            color: var(--text-color);
+            text-align: center;
+            letter-spacing: 10px; /* Increased letter spacing for the modern OTP block look */
+            transition: border-color 0.3s, box-shadow 0.3s;
+            box-sizing: border-box;
+            text-transform: uppercase; /* Optional: if OTP is alphanumeric */
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+        }
+
+        /* Button Styles (Matching Forgot Password Page) */
+        button {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary-color);
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 4px 10px rgba(74, 144, 226, 0.4);
+        }
+
+        button:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(74, 144, 226, 0.5);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 10px rgba(74, 144, 226, 0.4);
+        }
+
+        /* Back Link Styles (Matching Forgot Password Page) */
+        .back-link {
+            margin-top: 25px;
+            display: block;
+            color: var(--text-color);
+            font-size: 15px;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--primary-color);
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Responsive Adjustments (Mobile Focus) */
+        @media (max-width: 500px) {
+            body {
+                padding: 15px;
+            }
+
+            .card {
+                padding: 25px 20px 35px;
+                border-radius: 15px;
+                max-width: 100%;
+            }
+
+            h2 {
+                font-size: 26px;
+                margin-bottom: 20px;
+            }
+
+            input[type="text"] {
+                padding: 14px;
+                margin: 8px 0 15px;
+                letter-spacing: 8px; /* Slightly reduced spacing on mobile */
+            }
+
+            button {
+                padding: 14px;
+                font-size: 17px;
+            }
+
+            .back-link {
+                margin-top: 20px;
+                background: none;
+                text-decoration: underline;
+                color: #fff;
+                text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+            }
+
+            .back-link:hover {
+                color: #fff;
+                opacity: 0.8;
+                background: none;
+            }
+        }
+        
+        /* Message Card Styles - Modernized for consistency */
+        #messageContainer {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            z-index: 9999;
+        }
+
+        .message-card {
+            background: var(--card-background);
+            padding: 14px 20px;
+            min-width: 240px;
+            border-radius: 10px;
+            margin-top: 10px;
+            box-shadow: var(--shadow-light);
+            font-size: 15px;
+            opacity: 0;
+            animation: slideIn 0.5s forwards;
+            color: var(--text-color);
+            border-left-width: 6px;
+            border-left-style: solid;
+        }
+
+        .success {
+            border-left-color: #28a745;
+        }
+
+        .error {
+            border-left-color: #dc3545;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(40px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+    <h2>🔒 Verify OTP</h2>
+
+    <p class="description-text">
+        Please enter the **4-digit One-Time Password** sent to your registered email address.
+    </p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <input 
+            type="text" 
+            name="otp" 
+            placeholder="— — — —" 
+            maxlength="4" 
+            required
+            pattern="\d{4}" 
+            title="4-digit code"
+            autocomplete="off"
+        >
+
+        <button type="submit">Verify Code</button>
+    </form>
+</div>
+
+<a href="{% url 'login' %}" class="back-link">⬅ Back to Login</a>
+
+{% include 'partials/message_cards.html' %}
+
+</body>
+</html>

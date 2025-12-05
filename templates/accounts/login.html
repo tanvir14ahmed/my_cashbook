@@ -1,0 +1,344 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'mycashbook_logo.png' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - MyCashBook</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Reset and Base Styles */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Variables for Theming */
+        :root {
+            --brand-blue: #00c6ff;
+            --brand-purple: #4e4376;
+            --brand-dark: #2b5876;
+            --text-dark: #2c3e50;
+            --text-light: #fafafa;
+            --card-bg-opacity: 0.95;
+            --card-blur: 12px;
+            --success-color: #1abc9c; /* Added success color */
+            --error-color: #e74c3c;
+        }
+
+        /* Dynamic Background */
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(90deg, #4f7174, #c7edfb, #f9c7f4, #ecb8c9, #fffc3b);
+            background-size: 300% 300%;
+            animation: gradientShift 35s ease-in-out infinite;
+            color: var(--text-dark);
+            padding: 20px;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Brand Header */
+        .brand-header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .brand-header h1 {
+            font-size: 50px;
+            background: linear-gradient(90deg, var(--brand-dark), var(--brand-purple), var(--brand-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            margin-bottom: 5px;
+        }
+
+        .brand-header p {
+            font-size: 16px;
+            color: var(--text-light);
+            text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+            font-weight: 500;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Login Card */
+        .login-container {
+            background: rgba(255, 255, 255, var(--card-bg-opacity));
+            backdrop-filter: blur(var(--card-blur));
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            animation: fadeInUp 1.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes fadeInUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        h2 {
+            margin-bottom: 30px;
+            color: var(--text-dark);
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* Input Fields */
+        input {
+            width: 100%;
+            padding: 16px 18px;
+            margin: 12px 0;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f7f7f7;
+        }
+
+        input:focus {
+            border-color: var(--brand-blue);
+            box-shadow: 0 0 0 4px rgba(0,198,255,0.2);
+            outline: none;
+            background: var(--text-light);
+        }
+
+        /* Button */
+        .login-button {
+            width: 100%;
+            padding: 16px;
+            margin-top: 25px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(45deg, var(--brand-dark), var(--brand-purple), var(--brand-blue));
+            background-size: 200% 200%;
+            color: white;
+            font-size: 19px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-button:hover {
+            background-position: 100% 0%;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Active/Press Animation */
+        .login-button:active {
+            transform: scale(0.98); 
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.1s ease-out;
+        }
+
+        /* Loading State Styling */
+        .login-button.loading {
+            pointer-events: none;
+            background-position: 100% 0%;
+            opacity: 0.8;
+        }
+
+        /* Loader Animation */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loader {
+            display: inline-block;
+            margin-left: 10px;
+            width: 1.2em;
+            height: 1.2em;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            visibility: hidden;
+        }
+
+        .login-button.loading .button-text {
+            margin-right: 10px;
+        }
+
+        .login-button.loading .loader {
+            visibility: visible;
+        }
+        
+        /* Links and Typography */
+        .link-group {
+            margin-top: 25px;
+        }
+        .link-group p {
+            margin: 10px 0;
+            font-size: 15px;
+            color: #666;
+        }
+        a { 
+            color: var(--brand-dark); 
+            text-decoration: none; 
+            font-weight: 600; 
+            transition: color 0.3s; 
+        }
+        a:hover { 
+            color: var(--brand-blue); 
+            text-decoration: underline;
+        }
+
+        /* ----------------- Message Cards - Unified Styling ----------------- */
+        .messages-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 9999;
+        }
+
+        .message-card {
+            min-width: 280px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+            opacity: 0;
+            transform: translateX(40px);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease;
+        }
+        
+        /* Styling for Django 'error' and custom 'error_message' */
+        .message-card.error-card { 
+            background: var(--error-color); 
+        }
+        
+        /* Styling for Django 'success' */
+        .message-card.success-card {
+            background: var(--success-color); 
+        }
+
+        /* Class used by JavaScript to trigger the slide-in animation */
+        .message-card.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* ----------------- Responsive Design ----------------- */
+        @media (max-width: 480px) {
+            body { padding: 15px; }
+            .brand-header { margin-bottom: 20px; }
+            .brand-header h1 { font-size: 40px; }
+            .login-container { padding: 30px 25px; border-radius: 16px; }
+            h2 { font-size: 24px; margin-bottom: 25px; }
+            input { padding: 14px 16px; font-size: 15px; margin: 10px 0; }
+            .login-button { padding: 14px; font-size: 18px; margin-top: 20px; }
+            .messages-container { right: 10px; top: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="brand-header">
+    <h1>MyCashBook</h1>
+    <p>💰 Your Personal Expense Tracking System</p>
+</div>
+
+<div class="login-container">
+    <h2>Welcome Back!</h2>
+
+    <form id="loginForm" method="POST">
+        {% csrf_token %}
+        <input type="email" name="username" placeholder="Email Address" required autocomplete="email">
+        <input type="password" name="password" placeholder="Password" required autocomplete="current-password">
+        <button type="submit" class="login-button" id="loginButton">
+            <span class="button-text">Log In Securely</span>
+            <span class="loader"></span>
+        </button>
+    </form>
+    
+    <div class="link-group">
+        <p><a href="{% url 'forgot_password' %}">Forgot Password?</a></p>
+        <p>Don't have an account? <a href="{% url 'signup' %}">Sign up here</a></p>
+    </div>
+</div>
+
+<div class="messages-container">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message-card {% if message.tags == 'success' %}success-card{% else %}error-card{% endif %}">
+                <p>{{ message }}</p>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if error_message %}
+        <div class="message-card error-card">
+            <p>{{ error_message }}</p>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+    const loginForm = document.getElementById('loginForm');
+    const loginButton = document.getElementById('loginButton');
+
+    // --- Message Card Dismissal Logic ---
+    const messageCards = document.querySelectorAll('.message-card');
+    
+    messageCards.forEach(msg => {
+        // 1. Show message immediately by adding the active class, triggering the slide-in CSS
+        setTimeout(() => {
+            msg.classList.add('active'); 
+        }, 50);
+
+        // 2. Hide and remove the message after 4 seconds
+        setTimeout(() => {
+            msg.style.opacity = '0';
+            msg.style.transform = 'translateX(50px)';
+            setTimeout(() => msg.remove(), 800);
+        }, 4000); 
+    });
+    // ------------------------------------
+
+    // Button Press Animation Logic (Timeout Removed)
+    loginButton.addEventListener('click', function(e) {
+        if (loginForm.checkValidity()) {
+            // e.preventDefault() and the delayed submission (setTimeout) have been removed.
+            // The form will submit immediately after this code block executes.
+            
+            this.classList.add('loading');
+            this.querySelector('.button-text').textContent = 'Authenticating...';
+        }
+    });
+
+</script>
+
+</body>
+</html>

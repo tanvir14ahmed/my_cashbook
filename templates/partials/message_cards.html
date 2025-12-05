@@ -1,0 +1,20 @@
+{% if messages %}
+<div id="messageContainer">
+    {% for message in messages %}
+    <div class="message-card {% if message.tags == 'success' %}success{% elif message.tags == 'error' %}error{% else %}info{% endif %}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    const messagesCard = document.querySelectorAll('.message-card');
+    messagesCard.forEach(msg => {
+        setTimeout(() => {
+            msg.style.opacity = '0';
+            msg.style.transform = 'translateY(-25px)';
+            setTimeout(() => msg.remove(), 500);
+        }, 3000);
+    });
+</script>
+{% endif %}

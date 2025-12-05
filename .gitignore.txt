@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+pip-wheel-metadata/
+
+# Virtual envs
+venv/
+env/
+ENV/
+.venv/
+
+# VSCode
+.vscode/
+
+# macOS
+.DS_Store
+
+# Byte-compiled / logs
+*.log
+
+# Django
+*.sqlite3
+media/
+staticfiles/
+*.pyc
+
+# Environment
+.env
+.env.* 
+config/settings_local.py
+
+# IDEs
+.idea/
+*.iml
+
+# Coverage
+htmlcov/
+.coverage
+
+# Node (if frontend)
+node_modules/
+
+# JetBrains
+*.iws
