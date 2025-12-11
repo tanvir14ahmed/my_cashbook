@@ -410,7 +410,7 @@ def transaction_report_pdf(request, book_id):
         running_balance_para = Paragraph(f"<font color='{rb_color}'>{current_running_balance:.2f}</font>", styles["Normal"])
 
         data.append([
-            Paragraph(t.created_at.strftime("%Y-%m-%d"), styles["Normal"]), 
+            Paragraph(t.created_at.strftime("%d %B, %Y"), styles["Normal"]),
             Paragraph(t.type.capitalize(), styles["Normal"]),
             amount_para,
             running_balance_para,
@@ -490,10 +490,14 @@ def transaction_report_pdf(request, book_id):
         "This Is A System Generated Report, No Signature is Required",
         ParagraphStyle('FooterNote', parent=styles['Normal'], fontSize=9, alignment=1, textColor=colors.HexColor("#808080")) # Using a dark grey for 'transparency'
     )
-    elements.append(footer_note_para)
     
-    elements.append(Spacer(1, 12))
-    elements.append(Paragraph(f"Report generated on: {datetime.now().strftime('%Y-%m-%d %I:%M %p')}", timestamp_style))
+    
+    elements.append(Paragraph(
+    f"Report generated on (Time: Dhaka/Bangladesh): {datetime.now().strftime('%d %B, %Y (%I:%M %p)')}",
+    timestamp_style
+    ))
+
+    elements.append(footer_note_para)
 
     pdf.build(elements)
     return response
