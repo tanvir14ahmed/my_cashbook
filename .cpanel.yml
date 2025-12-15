@@ -1,0 +1,11 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/codelabb/public_html/
+
+    - /bin/cp -R manage.py $DEPLOYPATH
+    - /bin/cp -R core $DEPLOYPATH
+    - /bin/cp -R accounts $DEPLOYPATH
+    - /bin/cp -R books $DEPLOYPATH
+    - /bin/cp -R templates $DEPLOYPATH
+    - /bin/cp -R static $DEPLOYPATH
