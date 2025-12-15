@@ -1,11 +1,12 @@
 ---
-deployment:
-  tasks:
-    - export DEPLOYPATH=/home/codelabb/public_html/
-
-    - /bin/cp -R manage.py $DEPLOYPATH
-    - /bin/cp -R core $DEPLOYPATH
-    - /bin/cp -R accounts $DEPLOYPATH
-    - /bin/cp -R books $DEPLOYPATH
-    - /bin/cp -R templates $DEPLOYPATH
-    - /bin/cp -R static $DEPLOYPATH
+version: 2
+targets:
+  cpanel:
+    - path: /
+      type: python
+      python_version: python3.12
+      entry_point: manage.py
+      requirements_file: requirements.txt
+      post_deploy:
+        - python3.12 manage.py migrate
+        - python3.12 manage.py collectstatic --noinput
