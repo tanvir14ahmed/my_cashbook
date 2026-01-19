@@ -81,8 +81,8 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-'''DATABASES = {
+'''
+DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'codelabb_mycashbook_db',     # full DB name from cPanel
@@ -96,8 +96,8 @@ DATABASES = {
             # 'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         },
     }
-}
-'''
+}'''
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
