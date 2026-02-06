@@ -27,11 +27,55 @@ from datetime import datetime
 
 @login_required
 def dashboard_view(request):
+    # Get search query from request
+    search_query = request.GET.get('search', '').strip()
+    
+    # Filter books by user and apply search if provided
     books = Book.objects.filter(user=request.user)
-    display_name = request.user.profile.display_name  # get the display_name
+    
+    if search_query:
+        books = books.filter(name__icontains=search_query)
+    
+    # Sort books alphabetically by name (case-insensitive)
+    books = books.order_by('name')
+    
+    # Pagination: 12 books per page
+    paginator = Paginator(books, 12)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+    
+    # Check if this is an AJAX request
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+    
+    if is_ajax:
+        # Return JSON response for AJAX requests
+        from django.http import JsonResponse
+        books_data = []
+        for book in page_obj:
+            books_data.append({
+                'id': book.id,
+                'name': book.name,
+                'description': book.description or 'No description provided.',
+            })
+        
+        return JsonResponse({
+            'books': books_data,
+            'has_previous': page_obj.has_previous(),
+            'has_next': page_obj.has_next(),
+            'current_page': page_obj.number,
+            'total_pages': paginator.num_pages,
+            'previous_page': page_obj.previous_page_number() if page_obj.has_previous() else None,
+            'next_page': page_obj.next_page_number() if page_obj.has_next() else None,
+            'page_range': list(paginator.page_range),
+        })
+    
+    # Regular request - render full page
+    display_name = request.user.profile.display_name
+    
     context = {
-        'books': books,
-        'display_name': display_name
+        'page_obj': page_obj,
+        'display_name': display_name,
+        'search_query': search_query,
     }
     return render(request, 'books/dashboard.html', context)
 

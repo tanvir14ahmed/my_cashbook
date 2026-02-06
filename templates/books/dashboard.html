@@ -1,486 +1,818 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<link rel="icon" type="image/png" sizes="32x32" href="{% static 'mycashbook_logo.png' %}">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MyCashBook - Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<style>
-/* ----------------- VARIABLES & RESET ----------------- */
-:root {
-    --brand-blue: #00c6ff;
-    --brand-purple: #4e4376;
-    --brand-dark: #2b5876;
-    --text-dark: #2c3e50;
-    --card-bg-opacity: 0.15;
-    --card-blur: 25px;
-    --success-color: #1abc9c;
-    --error-color: #e74c3c;
-}
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
-}
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'mycashbook_logo.png' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyCashBook - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* ----------------- VARIABLES & RESET ----------------- */
+        :root {
+            --brand-blue: #00c6ff;
+            --brand-purple: #4e4376;
+            --brand-dark: #2b5876;
+            --text-dark: #2c3e50;
+            --card-bg-opacity: 0.15;
+            --card-blur: 25px;
+            --success-color: #1abc9c;
+            --error-color: #e74c3c;
+        }
 
-/* ----------------- BASE & BACKGROUND ----------------- */
-body {
-    /* Retained your animated gradient for unique branding */
-    background: linear-gradient(90deg, #2f4041, #2b5564, #583855, #4f323b, #4a492b);
-    background-size: 400% 400%;
-    animation: gradientBG 40s ease infinite;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    color: #fff;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
 
-@keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
+        /* ----------------- BASE & BACKGROUND ----------------- */
+        body {
+            background: linear-gradient(90deg, #2f4041, #2b5564, #583855, #4f323b, #4a492b);
+            background-size: 400% 400%;
+            animation: gradientBG 40s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #fff;
+        }
 
-/* New styles for the app title */
-.app-title-dashboard {
-    font-size: 60px;
-    /* UPDATED GRADIENT: Ethereal Blue to White Shimmer */
-    background: linear-gradient(90deg, #e0f2f7, #a7d9f7, #5cb8e6, #2196f3);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-weight: 800;
-    letter-spacing: 4px;
-    text-shadow: 0 5px 15px rgba(100,200,255,0.6);
-    margin-bottom: 5px;
-    animation: fadeInDown 1.5s ease-out;
-}
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
 
-/* Subtitle Style */
-.app-subtitle {
-    font-size: 16px;
-    font-weight: 600;
-    color: #b3e5ff;
-    margin-bottom: 25px;
-    text-shadow: 0 0 10px rgba(0, 198, 255, 0.4);
-    animation: fadeIn 1.8s ease-out;
-}
+            50% {
+                background-position: 100% 50%;
+            }
 
-.container {
-    width: 100%;
-    max-width: 1100px;
-    background: rgba(255, 255, 255, var(--card-bg-opacity));
-    backdrop-filter: blur(var(--card-blur));
-    padding: 40px;
-    border-radius: 25px;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-    animation: fadeIn 0.8s ease-out;
-    text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    margin-top: 0;
-}
+            100% {
+                background-position: 0% 50%;
+            }
+        }
 
-@keyframes fadeIn {
-    0% { opacity: 0; transform: translateY(-30px); }
-    100% { opacity: 1; transform: translateY(0); }
-}
+        /* App title styles */
+        .app-title-dashboard {
+            font-size: 60px;
+            background: linear-gradient(90deg, #e0f2f7, #a7d9f7, #5cb8e6, #2196f3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            letter-spacing: 4px;
+            text-shadow: 0 5px 15px rgba(100, 200, 255, 0.6);
+            margin-bottom: 5px;
+            animation: fadeInDown 1.5s ease-out;
+        }
 
-@keyframes fadeInDown {
-    from { opacity: 0; transform: translateY(-30px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+        .app-subtitle {
+            font-size: 16px;
+            font-weight: 600;
+            color: #b3e5ff;
+            margin-bottom: 25px;
+            text-shadow: 0 0 10px rgba(0, 198, 255, 0.4);
+            animation: fadeIn 1.8s ease-out;
+        }
 
-h2 {
-    margin-bottom: 30px;
-    color: #fff;
-    font-size: 32px;
-    font-weight: 800;
-    text-shadow: 0 4px 10px rgba(0,0,0,0.4);
-}
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background: rgba(255, 255, 255, var(--card-bg-opacity));
+            backdrop-filter: blur(var(--card-blur));
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.8s ease-out;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-top: 0;
+        }
 
-/* ----------------- TOP ACTIONS ----------------- */
-.top-actions {
-    margin-bottom: 40px;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-}
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
 
-/* ACTION BUTTONS (Added styles for form elements inside modal) */
-.action-btn,
-.modal-content input[type="text"],
-.modal-content textarea {
-    padding: 14px 30px;
-    border-radius: 12px;
-    font-weight: 600;
-    transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-}
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-.action-btn {
-    background: linear-gradient(135deg, var(--brand-purple), #764ba2);
-    color: #fff;
-    text-decoration: none;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    border: none;
-}
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
 
-.action-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 25px rgba(0,0,0,0.4);
-    background: linear-gradient(135deg, #764ba2, var(--brand-purple));
-}
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-.logout-btn {
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow: none;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-}
-.logout-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(0);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
+        h2 {
+            margin-bottom: 30px;
+            color: #fff;
+            font-size: 32px;
+            font-weight: 800;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
 
-/* ----------------- BOOK GRID ----------------- */
-.books-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 30px;
-    justify-items: center;
-}
+        /* ----------------- TOP ACTIONS ----------------- */
+        .top-actions {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
 
-.book-card {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(15px);
-    border-radius: 20px;
-    padding: 30px 25px;
-    width: 100%;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-    transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-    position: relative;
-    text-align: left;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
+        /* ----------------- SEARCH BAR ----------------- */
+        .search-container {
+            margin-bottom: 35px;
+            animation: slideInUp 0.6s ease-out;
+        }
 
-.book-card:hover {
-    transform: translateY(-5px) scale(1.02);
-    box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-}
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
 
-.book-card h3 {
-    margin-bottom: 8px;
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--brand-blue);
-    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
-}
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-.book-card p {
-    font-size: 15px;
-    color: #c0c0c0;
-    margin-bottom: 25px;
-    min-height: 40px;
-    line-height: 1.4;
-}
+        .search-wrapper {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+        }
 
-.book-actions {
-    display: flex;
-    justify-content: flex-start;
-    gap: 10px;
-}
+        .search-input {
+            width: 100%;
+            padding: 16px 50px 16px 20px;
+            border-radius: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
 
-.book-actions a {
-    text-decoration: none;
-    font-size: 14px;
-    padding: 10px 16px;
-    border-radius: 10px;
-    transition: 0.3s;
-    font-weight: 600;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
 
-.view-btn {
-    background: var(--success-color);
-    box-shadow: 0 4px 10px rgba(46, 204, 113, 0.4);
-}
+        .search-input:focus {
+            outline: none;
+            border-color: var(--brand-blue);
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 12px 30px rgba(0, 198, 255, 0.3);
+            transform: translateY(-2px);
+        }
 
-.delete-btn {
-    background: var(--error-color);
-    box-shadow: 0 4px 10px rgba(231, 76, 60, 0.4);
-}
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 18px;
+            pointer-events: none;
+        }
 
-.view-btn:hover, .delete-btn:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-}
+        .clear-search {
+            position: absolute;
+            right: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: #fff;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
 
-.empty-state p {
-    color: #fff;
-    font-size: 18px;
-    margin-top: 20px;
-}
-.empty-state a {
-    color: var(--brand-blue);
-    font-weight: 600;
-    text-decoration: none;
-}
+        .clear-search:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-50%) scale(1.1);
+        }
 
-/* ----------------- MODALS (Delete & Add Book) ----------------- */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 10000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.7);
-    backdrop-filter: blur(5px);
-    animation: modalFadeIn 0.3s ease-out;
-}
+        .clear-search.show {
+            display: flex;
+        }
 
-@keyframes modalFadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
+        /* Loading spinner */
+        .loading-spinner {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: var(--brand-blue);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            display: none;
+        }
 
-.modal-content {
-    background-color: #fff;
-    margin: 10% auto;
-    padding: 30px;
-    border-radius: 20px;
-    max-width: 450px;
-    text-align: center;
-    color: var(--text-dark);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-    animation: modalSlideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
+        .loading-spinner.show {
+            display: block;
+        }
 
-@keyframes modalSlideDown {
-    0% { transform: translateY(-100px); opacity: 0; }
-    100% { transform: translateY(0); opacity: 1; }
-}
+        @keyframes spin {
+            to {
+                transform: translateY(-50%) rotate(360deg);
+            }
+        }
 
-.modal-content h3 {
-    color: var(--brand-purple);
-    margin-bottom: 20px;
-    font-size: 24px;
-}
+        /* ACTION BUTTONS */
+        .action-btn,
+        .modal-content input[type="text"],
+        .modal-content textarea {
+            padding: 14px 30px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
 
-.modal-content p {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 25px;
-}
+        .action-btn {
+            background: linear-gradient(135deg, var(--brand-purple), #764ba2);
+            color: #fff;
+            text-decoration: none;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            border: none;
+        }
 
-/* Close button for Add Book Modal */
-.close-btn {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    transition: 0.3s;
-}
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(135deg, #764ba2, var(--brand-purple));
+        }
 
-.close-btn:hover,
-.close-btn:focus {
-    color: var(--error-color);
-    text-decoration: none;
-    cursor: pointer;
-}
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: none;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
 
-/* Form specific styles for Add Book Modal */
-.add-book-form label {
-    display: block;
-    text-align: left;
-    margin-top: 15px;
-    margin-bottom: 5px;
-    font-weight: 700;
-    font-size: 14px;
-    color: var(--text-dark);
-}
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(0);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
 
-.add-book-form input[type="text"],
-.add-book-form textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-    font-size: 16px;
-    color: var(--text-dark);
-}
+        /* ----------------- BOOK GRID ----------------- */
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            justify-items: center;
+            margin-bottom: 40px;
+            min-height: 200px;
+        }
 
-.add-book-form textarea {
-    resize: vertical;
-    min-height: 80px;
-}
+        .book-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px 25px;
+            width: 100%;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+            position: relative;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: cardFadeIn 0.5s ease-out backwards;
+        }
 
-.modal-actions {
-    margin-top: 30px;
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-}
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
 
-.modal-content button {
-    padding: 12px 25px;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: 0.3s;
-    font-weight: 600;
-    font-size: 16px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
 
-.confirm-btn {
-    background: var(--error-color);
-    color: #fff;
-}
+        .book-card:nth-child(1) {
+            animation-delay: 0.05s;
+        }
 
-.submit-btn {
-    background: var(--brand-blue);
-    color: #fff;
-    flex-grow: 1;
-}
+        .book-card:nth-child(2) {
+            animation-delay: 0.1s;
+        }
 
-.submit-btn:hover {
-    background: #0099cc;
-}
+        .book-card:nth-child(3) {
+            animation-delay: 0.15s;
+        }
 
-.cancel-btn {
-    background: #e0e0e0;
-    color: var(--text-dark);
-}
+        .book-card:nth-child(4) {
+            animation-delay: 0.2s;
+        }
 
-.confirm-btn:hover {
-    background: #c0392b;
-}
+        .book-card:nth-child(5) {
+            animation-delay: 0.25s;
+        }
 
-.cancel-btn:hover {
-    background: #ccc;
-}
+        .book-card:nth-child(6) {
+            animation-delay: 0.3s;
+        }
 
-/* Override for delete modal buttons */
-#deleteModal .modal-actions {
-    justify-content: center;
-}
-#deleteModal .modal-content button {
-    margin: 10px;
-}
+        .book-card:nth-child(7) {
+            animation-delay: 0.35s;
+        }
 
-/* ----------------- MESSAGE CARDS ----------------- */
-.message-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
+        .book-card:nth-child(8) {
+            animation-delay: 0.4s;
+        }
 
-.message-card {
-    min-width: 280px;
-    padding: 15px 20px;
-    border-radius: 10px;
-    color: white;
-    font-weight: 600;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-    opacity: 0;
-    transform: translateX(40px);
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
+        .book-card:nth-child(9) {
+            animation-delay: 0.45s;
+        }
 
-.message-card.success { background: var(--success-color); }
-.message-card.error { background: var(--error-color); }
-.message-card.info { background: #3498db; }
+        .book-card:nth-child(10) {
+            animation-delay: 0.5s;
+        }
 
-.message-card.show {
-    opacity: 1;
-    transform: translateX(0);
-}
+        .book-card:nth-child(11) {
+            animation-delay: 0.55s;
+        }
 
-/* ----------------- Responsive ----------------- */
-@media (max-width: 768px) {
-    .app-title-dashboard {
-        font-size: 40px;
-        margin-bottom: 5px;
-    }
-    .app-subtitle {
-        font-size: 14px;
-        margin-bottom: 15px;
-    }
-    .container {
-        padding: 25px;
-    }
-    h2 {
-        font-size: 24px;
-    }
-    .top-actions {
-        flex-direction: column;
-        gap: 15px;
-    }
-    .action-btn {
-        width: 100%;
-        justify-content: center;
-    }
-    .books-grid {
-        grid-template-columns: 1fr;
-    }
-}
-</style>
+        .book-card:nth-child(12) {
+            animation-delay: 0.6s;
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            border-color: rgba(0, 198, 255, 0.3);
+        }
+
+        .book-card h3 {
+            margin-bottom: 8px;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--brand-blue);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .book-card p {
+            font-size: 15px;
+            color: #c0c0c0;
+            margin-bottom: 25px;
+            min-height: 40px;
+            line-height: 1.4;
+        }
+
+        .book-actions {
+            display: flex;
+            justify-content: flex-start;
+            gap: 10px;
+        }
+
+        .book-actions a {
+            text-decoration: none;
+            font-size: 14px;
+            padding: 10px 16px;
+            border-radius: 10px;
+            transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+            font-weight: 600;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .view-btn {
+            background: var(--success-color);
+            box-shadow: 0 4px 10px rgba(46, 204, 113, 0.4);
+        }
+
+        .delete-btn {
+            background: var(--error-color);
+            box-shadow: 0 4px 10px rgba(231, 76, 60, 0.4);
+        }
+
+        .view-btn:hover,
+        .delete-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ----------------- PAGINATION ----------------- */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 30px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .pagination-info {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            font-weight: 600;
+            margin: 0 15px;
+        }
+
+        .pagination-btn {
+            padding: 10px 18px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pagination-btn:hover:not(.disabled) {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .pagination-btn.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .page-numbers {
+            display: flex;
+            gap: 8px;
+        }
+
+        .page-number {
+            padding: 8px 14px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .page-number:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .page-number.active {
+            background: linear-gradient(135deg, var(--brand-blue), #0099cc);
+            border-color: var(--brand-blue);
+            box-shadow: 0 4px 12px rgba(0, 198, 255, 0.4);
+        }
+
+        .empty-state {
+            padding: 60px 20px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .empty-state p {
+            color: #fff;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .empty-state a {
+            color: var(--brand-blue);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        /* ----------------- MODALS (Delete & Add Book) ----------------- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 450px;
+            text-align: center;
+            color: var(--text-dark);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            animation: modalSlideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes modalSlideDown {
+            0% {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-content h3 {
+            color: var(--brand-purple);
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .modal-content p {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: var(--error-color);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .add-book-form label {
+            display: block;
+            text-align: left;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        .add-book-form input[type="text"],
+        .add-book-form textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            color: var(--text-dark);
+        }
+
+        .add-book-form textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-actions {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .modal-content button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: 600;
+            font-size: 16px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .confirm-btn {
+            background: var(--error-color);
+            color: #fff;
+        }
+
+        .submit-btn {
+            background: var(--brand-blue);
+            color: #fff;
+            flex-grow: 1;
+        }
+
+        .submit-btn:hover {
+            background: #0099cc;
+        }
+
+        .cancel-btn {
+            background: #e0e0e0;
+            color: var(--text-dark);
+        }
+
+        .confirm-btn:hover {
+            background: #c0392b;
+        }
+
+        .cancel-btn:hover {
+            background: #ccc;
+        }
+
+        #deleteModal .modal-actions {
+            justify-content: center;
+        }
+
+        #deleteModal .modal-content button {
+            margin: 10px;
+        }
+
+        /* ----------------- MESSAGE CARDS ----------------- */
+        .message-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message-card {
+            min-width: 280px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transform: translateX(40px);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .message-card.success {
+            background: var(--success-color);
+        }
+
+        .message-card.error {
+            background: var(--error-color);
+        }
+
+        .message-card.info {
+            background: #3498db;
+        }
+
+        .message-card.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* ----------------- Responsive ----------------- */
+        @media (max-width: 768px) {
+            .app-title-dashboard {
+                font-size: 40px;
+                margin-bottom: 5px;
+            }
+
+            .app-subtitle {
+                font-size: 14px;
+                margin-bottom: 15px;
+            }
+
+            .container {
+                padding: 25px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            .top-actions {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .books-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pagination-container {
+                flex-wrap: wrap;
+            }
+
+            .page-numbers {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
+
 <body>
-<div class="message-container">
-    {% if messages %}
+    <div class="message-container">
+        {% if messages %}
         {% for message in messages %}
-            <div class="message-card {% if message.tags == 'error' %}error{% elif message.tags == 'success' %}success{% else %}info{% endif %}">
-                <p>{{ message }}</p>
-            </div>
+        <div
+            class="message-card {% if message.tags == 'error' %}error{% elif message.tags == 'success' %}success{% else %}info{% endif %}">
+            <p>{{ message }}</p>
+        </div>
         {% endfor %}
-    {% endif %}
-</div>
-
-<a href="https://www.mycashbook.codelab-by-tnv.top" style="text-decoration: none;">
-    <h1 class="app-title-dashboard">MyCashBook</h1>
-</a>
-<p class="app-subtitle">Your Personal Expense Tracking App</p>
-
-<div class="container">
-    <h2>Welcome, {{ display_name }} 👋</h2>
-
-    <div class="top-actions">
-        <button id="addBookBtn" class="action-btn">
-            <i class="fas fa-plus"></i> Add New Book
-        </button>
-        <a href="{% url 'logout' %}" class="action-btn logout-btn">
-            <i class="fas fa-sign-out-alt"></i> Logout
-        </a>
+        {% endif %}
     </div>
 
-    {% if books %}
-        <div class="books-grid">
-            {% for book in books %}
+    <a href="https://www.mycashbook.codelab-by-tnv.top" style="text-decoration: none;">
+        <h1 class="app-title-dashboard">MyCashBook</h1>
+    </a>
+    <p class="app-subtitle">Your Personal Expense Tracking App</p>
+
+    <div class="container">
+        <h2>Welcome, {{ display_name }} 👋</h2>
+
+        <div class="top-actions">
+            <button id="addBookBtn" class="action-btn">
+                <i class="fas fa-plus"></i> Add New Book
+            </button>
+            <a href="{% url 'logout' %}" class="action-btn logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-container">
+            <div class="search-wrapper">
+                <input type="text" class="search-input" placeholder="🔍 Search for a book by name..."
+                    value="{{ search_query }}" id="searchInput" autocomplete="off">
+                <button type="button" class="clear-search" id="clearSearch">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="loading-spinner" id="loadingSpinner"></div>
+                <i class="fas fa-search search-icon" id="searchIcon"></i>
+            </div>
+        </div>
+
+        <!-- Books Grid Container -->
+        <div id="booksContainer">
+            {% if page_obj %}
+            <div class="books-grid" id="booksGrid">
+                {% for book in page_obj %}
                 <div class="book-card">
                     <h3><i class="fas fa-book-open"></i> {{ book.name }}</h3>
-                    <p>{{ book.description|default:"No description provided." }}</p>
+                    <p>{% if book.description %}{{ book.description }}{% else %}No description provided.{% endif %}</p>
                     <div class="book-actions">
                         <a href="{% url 'book_detail' book.id %}" class="view-btn">
                             <i class="fas fa-eye"></i> View Transactions
@@ -490,114 +822,381 @@ h2 {
                         </a>
                     </div>
                 </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <div class="empty-state">
-            <i class="fas fa-box-open fa-3x" style="color:#e0e0e0; margin-bottom: 15px;"></i>
-            <p>It looks a little lonely here. <a href="#" id="emptyAddBookLink" style="text-decoration: underline;">Create your first Book</a> to start tracking your cashflow!</p>
-        </div>
-    {% endif %}
-</div>
-
-<div id="deleteModal" class="modal">
-    <div class="modal-content">
-        <p>⚠️ Are you sure you want to **PERMANENTLY DELETE** this book?</p>
-        <form id="deleteForm" method="POST">
-            {% csrf_token %}
-            <div class="modal-actions" style="justify-content: center;">
-                <button type="submit" class="confirm-btn">Yes, Delete It</button>
-                <button type="button" class="cancel-btn" onclick="closeModal('deleteModal')">Cancel</button>
+                {% endfor %}
             </div>
-        </form>
+
+            <!-- Pagination -->
+            <div id="paginationContainer">
+                {% if page_obj.paginator.num_pages > 1 %}
+                <div class="pagination-container">
+                    {% if page_obj.has_previous %}
+                    <a href="#" class="pagination-btn" data-page="1">
+                        <i class="fas fa-angle-double-left"></i> First
+                    </a>
+                    <a href="#" class="pagination-btn" data-page="{{ page_obj.previous_page_number }}">
+                        <i class="fas fa-angle-left"></i> Previous
+                    </a>
+                    {% else %}
+                    <span class="pagination-btn disabled">
+                        <i class="fas fa-angle-double-left"></i> First
+                    </span>
+                    <span class="pagination-btn disabled">
+                        <i class="fas fa-angle-left"></i> Previous
+                    </span>
+                    {% endif %}
+
+                    <div class="page-numbers" id="pageNumbers">
+                        {% for num in page_obj.paginator.page_range %}
+                        {% if num == page_obj.number %}
+                        <span class="page-number active">{{ num }}</span>
+                        {% elif num > page_obj.number|add:-3 and num < page_obj.number|add:3 %} <a href="#"
+                            class="page-number" data-page="{{ num }}">{{ num }}</a>
+                            {% endif %}
+                            {% endfor %}
+                    </div>
+
+                    <span class="pagination-info" id="paginationInfo">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                    </span>
+
+                    {% if page_obj.has_next %}
+                    <a href="#" class="pagination-btn" data-page="{{ page_obj.next_page_number }}">
+                        Next <i class="fas fa-angle-right"></i>
+                    </a>
+                    <a href="#" class="pagination-btn" data-page="{{ page_obj.paginator.num_pages }}">
+                        Last <i class="fas fa-angle-double-right"></i>
+                    </a>
+                    {% else %}
+                    <span class="pagination-btn disabled">
+                        Next <i class="fas fa-angle-right"></i>
+                    </span>
+                    <span class="pagination-btn disabled">
+                        Last <i class="fas fa-angle-double-right"></i>
+                    </span>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-box-open fa-3x" style="color:#e0e0e0; margin-bottom: 15px;"></i>
+                <p>It looks a little lonely here. <a href="#" id="emptyAddBookLink"
+                        style="text-decoration: underline;">Create your first Book</a> to start tracking your cashflow!
+                </p>
+            </div>
+            {% endif %}
+        </div>
     </div>
-</div>
 
-<div id="addBookModal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal('addBookModal')">&times;</span>
-        <h3><i class="fas fa-plus-circle"></i> Add New Cash Book</h3>
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <p>⚠️ Are you sure you want to **PERMANENTLY DELETE** this book?</p>
+            <form id="deleteForm" method="POST">
+                {% csrf_token %}
+                <div class="modal-actions" style="justify-content: center;">
+                    <button type="submit" class="confirm-btn">Yes, Delete It</button>
+                    <button type="button" class="cancel-btn" onclick="closeModal('deleteModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-        <form id="addBookForm" method="POST" action="{% url 'add_book' %}" class="add-book-form">
-            {% csrf_token %}
+    <div id="addBookModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('addBookModal')">&times;</span>
+            <h3><i class="fas fa-plus-circle"></i> Add New Cash Book</h3>
 
-            <label for="bookName">Book Name:</label>
-            <input type="text" id="bookName" name="name" placeholder="e.g., Personal Savings, Home Budget" required maxlength="100">
+            <form id="addBookForm" method="POST" action="{% url 'add_book' %}" class="add-book-form">
+                {% csrf_token %}
 
-            <label for="bookDescription">Description (Optional):</label>
-            <textarea id="bookDescription" name="description" placeholder="A brief explanation of what this book tracks." maxlength="255"></textarea>
+                <label for="bookName">Book Name:</label>
+                <input type="text" id="bookName" name="name" placeholder="e.g., Personal Savings, Home Budget" required
+                    maxlength="100">
 
-            <div class="modal-actions">
-                <button type="submit" class="submit-btn">Create Book</button>
-                <button type="button" class="cancel-btn" onclick="closeModal('addBookModal')">Cancel</button>
-            </div>
-        </form>
-      </div>
-</div>
+                <label for="bookDescription">Description (Optional):</label>
+                <textarea id="bookDescription" name="description"
+                    placeholder="A brief explanation of what this book tracks." maxlength="255"></textarea>
 
-
-<script>
-    // --- Delete Modal Logic ---
-    const deleteModal = document.getElementById('deleteModal');
-    const deleteForm = document.getElementById('deleteForm');
-    const addBookModal = document.getElementById('addBookModal');
-    const addBookBtn = document.getElementById('addBookBtn');
-    const emptyAddBookLink = document.getElementById('emptyAddBookLink');
-
-    function confirmDelete(bookId) {
-        // IMPORTANT: Ensure your Django delete URL accepts the ID
-        deleteForm.action = `/delete/${bookId}/`; 
-        deleteModal.style.display = 'block';
-    }
-
-    function closeModal(modalId) {
-        document.getElementById(modalId).style.display = 'none';
-    }
-
-    // --- Add Book Modal Logic ---
-    function openAddBookModal() {
-        addBookModal.style.display = 'block';
-    }
-
-    // Attach event listeners to open the modal
-    if (addBookBtn) {
-        addBookBtn.addEventListener('click', openAddBookModal);
-    }
-    if (emptyAddBookLink) {
-        emptyAddBookLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            openAddBookModal();
-        });
-    }
+                <div class="modal-actions">
+                    <button type="submit" class="submit-btn">Create Book</button>
+                    <button type="button" class="cancel-btn" onclick="closeModal('addBookModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
 
-    // Close modal when clicking outside
-    window.onclick = function(event) {
-        if (event.target == deleteModal) {
-            closeModal('deleteModal');
-        } else if (event.target == addBookModal) {
-            closeModal('addBookModal');
+    <script>
+        // --- Global Variables ---
+        const deleteModal = document.getElementById('deleteModal');
+        const deleteForm = document.getElementById('deleteForm');
+        const addBookModal = document.getElementById('addBookModal');
+        const addBookBtn = document.getElementById('addBookBtn');
+        const emptyAddBookLink = document.getElementById('emptyAddBookLink');
+        const searchInput = document.getElementById('searchInput');
+        const clearSearch = document.getElementById('clearSearch');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const searchIcon = document.getElementById('searchIcon');
+
+        let currentPage = {{ page_obj.number|default:1 }};
+        let searchTimeout;
+
+        // --- AJAX Search Function ---
+        function performSearch(page = 1) {
+            const searchQuery = searchInput.value.trim();
+
+            // Show loading state
+            loadingSpinner.classList.add('show');
+            searchIcon.style.display = 'none';
+
+            // Build URL with parameters
+            const url = new URL(window.location.origin + '{% url "dashboard" %}');
+            if (searchQuery) {
+                url.searchParams.set('search', searchQuery);
+            }
+            url.searchParams.set('page', page);
+
+            // Make AJAX request
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/json',
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    updateBooksGrid(data);
+                    updatePagination(data);
+                    currentPage = data.current_page;
+
+                    // Hide loading state
+                    loadingSpinner.classList.remove('show');
+                    searchIcon.style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Search error:', error);
+                    loadingSpinner.classList.remove('show');
+                    searchIcon.style.display = 'block';
+                });
         }
-    }
 
-    // --- Message Animation Script ---
-    const messageCards = document.querySelectorAll('.message-container .message-card');
+        // --- Update Books Grid ---
+        function updateBooksGrid(data) {
+            const booksGrid = document.getElementById('booksGrid');
 
-    if (messageCards.length > 0) {
-        messageCards.forEach((msg, index) => {
-            // 1. Show the message with a slight delay
-            setTimeout(() => {
-                msg.classList.add('show');
-            }, 100 + (index * 200));
+            if (data.books.length === 0) {
+                document.getElementById('booksContainer').innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-box-open fa-3x" style="color:#e0e0e0; margin-bottom: 15px;"></i>
+                    <p>No books found. Try a different search or <a href="#" id="emptyAddBookLink" style="text-decoration: underline;">create a new book</a>!</p>
+                </div>
+            `;
+                // Re-attach event listener
+                const newEmptyLink = document.getElementById('emptyAddBookLink');
+                if (newEmptyLink) {
+                    newEmptyLink.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        openAddBookModal();
+                    });
+                }
+                return;
+            }
 
-            // 2. Hide and remove the message after the display time
-            setTimeout(() => {
-                msg.style.opacity = '0';
-                msg.style.transform = 'translateX(40px)';
-                setTimeout(() => msg.remove(), 600);
-            }, 5000 + (index * 200));
+            let booksHTML = '';
+            data.books.forEach((book, index) => {
+                booksHTML += `
+                <div class="book-card" style="animation-delay: ${index * 0.05}s;">
+                    <h3><i class="fas fa-book-open"></i> ${escapeHtml(book.name)}</h3>
+                    <p>${escapeHtml(book.description)}</p>
+                    <div class="book-actions">
+                        <a href="/book/${book.id}/" class="view-btn">
+                            <i class="fas fa-eye"></i> View Transactions
+                        </a>
+                        <a href="#" class="delete-btn" onclick="confirmDelete(${book.id})">
+                            <i class="fas fa-trash-alt"></i> Delete Book
+                        </a>
+                    </div>
+                </div>
+            `;
+            });
+
+            booksGrid.innerHTML = booksHTML;
+        }
+
+        // --- Update Pagination ---
+        function updatePagination(data) {
+            const paginationContainer = document.getElementById('paginationContainer');
+
+            if (data.total_pages <= 1) {
+                paginationContainer.innerHTML = '';
+                return;
+            }
+
+            let paginationHTML = '<div class="pagination-container">';
+
+            // First and Previous buttons
+            if (data.has_previous) {
+                paginationHTML += `
+                <a href="#" class="pagination-btn" data-page="1">
+                    <i class="fas fa-angle-double-left"></i> First
+                </a>
+                <a href="#" class="pagination-btn" data-page="${data.previous_page}">
+                    <i class="fas fa-angle-left"></i> Previous
+                </a>
+            `;
+            } else {
+                paginationHTML += `
+                <span class="pagination-btn disabled">
+                    <i class="fas fa-angle-double-left"></i> First
+                </span>
+                <span class="pagination-btn disabled">
+                    <i class="fas fa-angle-left"></i> Previous
+                </span>
+            `;
+            }
+
+            // Page numbers
+            paginationHTML += '<div class="page-numbers">';
+            data.page_range.forEach(num => {
+                if (num === data.current_page) {
+                    paginationHTML += `<span class="page-number active">${num}</span>`;
+                } else if (num > data.current_page - 3 && num < data.current_page + 3) {
+                    paginationHTML += `<a href="#" class="page-number" data-page="${num}">${num}</a>`;
+                }
+            });
+            paginationHTML += '</div>';
+
+            // Page info
+            paginationHTML += `<span class="pagination-info">Page ${data.current_page} of ${data.total_pages}</span>`;
+
+            // Next and Last buttons
+            if (data.has_next) {
+                paginationHTML += `
+                <a href="#" class="pagination-btn" data-page="${data.next_page}">
+                    Next <i class="fas fa-angle-right"></i>
+                </a>
+                <a href="#" class="pagination-btn" data-page="${data.total_pages}">
+                    Last <i class="fas fa-angle-double-right"></i>
+                </a>
+            `;
+            } else {
+                paginationHTML += `
+                <span class="pagination-btn disabled">
+                    Next <i class="fas fa-angle-right"></i>
+                </span>
+                <span class="pagination-btn disabled">
+                    Last <i class="fas fa-angle-double-right"></i>
+                </span>
+            `;
+            }
+
+            paginationHTML += '</div>';
+            paginationContainer.innerHTML = paginationHTML;
+
+            // Attach event listeners to pagination buttons
+            attachPaginationListeners();
+        }
+
+        // --- Attach Pagination Event Listeners ---
+        function attachPaginationListeners() {
+            document.querySelectorAll('[data-page]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const page = parseInt(btn.getAttribute('data-page'));
+                    performSearch(page);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            });
+        }
+
+        // --- Escape HTML ---
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // --- Search Input Event Listener ---
+        searchInput.addEventListener('input', function () {
+            toggleClearButton();
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                performSearch(1); // Reset to page 1 on new search
+            }, 500); // 500ms debounce
         });
-    }
-</script>
+
+        // --- Clear Search ---
+        clearSearch.addEventListener('click', function () {
+            searchInput.value = '';
+            toggleClearButton();
+            performSearch(1);
+        });
+
+        // --- Toggle Clear Button ---
+        function toggleClearButton() {
+            if (searchInput.value.trim().length > 0) {
+                clearSearch.classList.add('show');
+            } else {
+                clearSearch.classList.remove('show');
+            }
+        }
+
+        // Initial state
+        toggleClearButton();
+        attachPaginationListeners();
+
+        // --- Delete Modal Logic ---
+        function confirmDelete(bookId) {
+            deleteForm.action = `/delete/${bookId}/`;
+            deleteModal.style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // --- Add Book Modal Logic ---
+        function openAddBookModal() {
+            addBookModal.style.display = 'block';
+        }
+
+        if (addBookBtn) {
+            addBookBtn.addEventListener('click', openAddBookModal);
+        }
+        if (emptyAddBookLink) {
+            emptyAddBookLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                openAddBookModal();
+            });
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function (event) {
+            if (event.target == deleteModal) {
+                closeModal('deleteModal');
+            } else if (event.target == addBookModal) {
+                closeModal('addBookModal');
+            }
+        }
+
+        // --- Message Animation Script ---
+        const messageCards = document.querySelectorAll('.message-container .message-card');
+
+        if (messageCards.length > 0) {
+            messageCards.forEach((msg, index) => {
+                setTimeout(() => {
+                    msg.classList.add('show');
+                }, 100 + (index * 200));
+
+                setTimeout(() => {
+                    msg.style.opacity = '0';
+                    msg.style.transform = 'translateX(40px)';
+                    setTimeout(() => msg.remove(), 600);
+                }, 5000 + (index * 200));
+            });
+        }
+    </script>
 </body>
+
 </html>
