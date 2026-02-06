@@ -1047,7 +1047,7 @@
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
         });
 
-        let currentPage = {{ page_obj.number|default: 1 }};
+        let currentPage = {{ page_obj.number|default:1 }};
         let searchTimeout;
 
         // --- AJAX Search Function ---
