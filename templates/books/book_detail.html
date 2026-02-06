@@ -8,31 +8,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ book.name }} - Transactions</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+        // Inline script to prevent theme flicker
+        (function () {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark-mode');
+                document.addEventListener('DOMContentLoaded', () => {
+                    document.body.classList.add('dark-mode');
+                });
+            }
+        })();
+    </script>
     <style>
         /* 1. CSS Variables & Reset */
         :root {
             --primary-color: #3b82f6;
-            /* Blue-500 */
             --primary-dark: #2563eb;
-            /* Blue-600 */
             --danger-color: #ef4444;
             --error-color: #b91c1c;
-            /* A darker red for error messages (Red-700) */
             --warning-color: #f59e0b;
             --success-color: #10b981;
-            /* Green-500 */
-            --danger-color: #ef4444;
-            /* Red-500 */
-            --warning-color: #f59e0b;
-            /* Amber-500 */
+
+            /* Theme Variables (Light Mode) */
+            --bg-color: #f9fafb;
             --text-color: #1f2937;
-            /* Gray-800 */
-            --light-bg: #f9fafb;
-            /* Gray-50 */
             --card-bg: #ffffff;
+            --card-border: #e5e7eb;
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
             --light-gray: #f3f4f6;
-            /* Added for hover effect on cancel button */
+            --table-hover: #f3f4f6;
+            --input-bg: #ffffff;
+            --modal-overlay: rgba(0, 0, 0, 0.5);
+        }
+
+        body.dark-mode {
+            /* Theme Variables (Dark Mode) */
+            --bg-color: #0f172a;
+            --text-color: #f1f5f9;
+            --card-bg: #1e293b;
+            --card-border: #334155;
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+            --light-gray: #334155;
+            --table-hover: #1e293b;
+            --input-bg: #0f172a;
+            --modal-overlay: rgba(0, 0, 0, 0.8);
         }
 
         * {
@@ -43,10 +64,11 @@
         }
 
         body {
-            background: var(--light-bg);
+            background: var(--bg-color);
             padding: 1rem;
             color: var(--text-color);
             line-height: 1.5;
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
         /* 2. Layout & Header */
@@ -129,6 +151,7 @@
             overflow: hidden;
             box-shadow: var(--shadow-md);
             margin-top: 1.5rem;
+            border: 1px solid var(--card-border);
         }
 
         .transactions-table th {
@@ -370,7 +393,7 @@
         /* Report Modal Separator */
         #reportModal hr {
             border: none;
-            border-top: 1px solid #e5e7eb;
+            border-top: 1px solid var(--card-border);
             margin: 1.5rem 0;
         }
 
@@ -474,8 +497,8 @@
             padding: 8px 14px;
             border-radius: 8px;
             text-decoration: none;
-            color: #333;
-            background: #eaeaea;
+            color: var(--text-color);
+            background: var(--light-gray);
             font-weight: 500;
             transition: 0.2s;
         }
@@ -494,9 +517,49 @@
         }
 
         .pagination .disabled {
-            background: #ddd;
-            color: #888;
+            background: var(--light-gray);
+            opacity: 0.5;
+            color: var(--text-color);
             pointer-events: none;
+        }
+
+        /* ----------------- THEME TOGGLE ----------------- */
+        .theme-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem;
+            background: var(--card-bg);
+            color: var(--text-color);
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.2s;
+            cursor: pointer;
+            border: 1px solid var(--card-border);
+            width: 40px;
+            height: 40px;
+        }
+
+        .theme-toggle:hover {
+            background: var(--table-hover);
+            transform: scale(1.05);
+        }
+
+        body.dark-mode .sun-icon {
+            display: block;
+        }
+
+        body.dark-mode .moon-icon {
+            display: none;
+        }
+
+        .sun-icon {
+            display: none;
+        }
+
+        .moon-icon {
+            display: block;
         }
 
         /* ----------------- MESSAGE CARDS ----------------- */
@@ -569,6 +632,10 @@
             <a href="javascript:void(0)" id="addBtn" class="button">➕ Add Transaction</a>
             <a href="javascript:void(0)" id="reportBtn" class="button">📄 Generate PDF Report</a>
             <a href="{% url 'dashboard' %}" class="button">⬅ Back to Dashboard</a>
+            <button id="themeToggle" class="theme-toggle" title="Toggle Dark/Light Mode">
+                <i class="fas fa-moon moon-icon"></i>
+                <i class="fas fa-sun sun-icon"></i>
+            </button>
         </div>
 
         {% if page_obj %}
@@ -736,6 +803,13 @@
     </div>
 
     <script>
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.body.classList.toggle('dark-mode');
+            document.documentElement.classList.toggle('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+
         const modals = {
             add: document.getElementById('addModal'),
             edit: document.getElementById('editModal'),

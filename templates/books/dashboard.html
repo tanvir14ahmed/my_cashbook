@@ -9,17 +9,55 @@
     <title>MyCashBook - Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+        // Inline script to prevent theme flicker
+        (function () {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark-mode');
+                // Apply to body as well once it loads
+                document.addEventListener('DOMContentLoaded', () => {
+                    document.body.classList.add('dark-mode');
+                });
+            }
+        })();
+    </script>
     <style>
         /* ----------------- VARIABLES & RESET ----------------- */
         :root {
+            /* Brand Colors */
             --brand-blue: #00c6ff;
             --brand-purple: #4e4376;
             --brand-dark: #2b5876;
-            --text-dark: #2c3e50;
-            --card-bg-opacity: 0.15;
-            --card-blur: 25px;
             --success-color: #1abc9c;
             --error-color: #e74c3c;
+
+            /* Theme Variables (Light Mode Default) */
+            --bg-gradient: linear-gradient(90deg, #e0f2f7, #f0f4f8, #e8f0f2);
+            --text-main: #2c3e50;
+            --text-muted: #546e7a;
+            --container-bg: rgba(255, 255, 255, 0.8);
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --card-border: rgba(0, 0, 0, 0.05);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --input-bg: rgba(255, 255, 255, 0.9);
+            --input-border: rgba(0, 0, 0, 0.1);
+            --glass-blur: 20px;
+            --title-gradient: linear-gradient(90deg, #2b5876, #4e4376);
+        }
+
+        body.dark-mode {
+            /* Theme Variables (Dark Mode) */
+            --bg-gradient: linear-gradient(90deg, #1a1a2e, #16213e, #0f3460, #1a1a2e);
+            --text-main: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --container-bg: rgba(255, 255, 255, 0.05);
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --card-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            --input-bg: rgba(255, 255, 255, 0.1);
+            --input-border: rgba(255, 255, 255, 0.2);
+            --title-gradient: linear-gradient(90deg, #e0f2f7, #a7d9f7, #5cb8e6, #2196f3);
         }
 
         * {
@@ -31,7 +69,7 @@
 
         /* ----------------- BASE & BACKGROUND ----------------- */
         body {
-            background: linear-gradient(90deg, #2f4041, #2b5564, #583855, #4f323b, #4a492b);
+            background: var(--bg-gradient);
             background-size: 400% 400%;
             animation: gradientBG 40s ease infinite;
             min-height: 100vh;
@@ -40,7 +78,8 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
-            color: #fff;
+            color: var(--text-main);
+            transition: background 0.5s ease, color 0.5s ease;
         }
 
         @keyframes gradientBG {
@@ -60,12 +99,12 @@
         /* App title styles */
         .app-title-dashboard {
             font-size: 60px;
-            background: linear-gradient(90deg, #e0f2f7, #a7d9f7, #5cb8e6, #2196f3);
+            background: var(--title-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: 800;
             letter-spacing: 4px;
-            text-shadow: 0 5px 15px rgba(100, 200, 255, 0.6);
+            text-shadow: 0 5px 15px rgba(100, 200, 255, 0.3);
             margin-bottom: 5px;
             animation: fadeInDown 1.5s ease-out;
         }
@@ -73,24 +112,25 @@
         .app-subtitle {
             font-size: 16px;
             font-weight: 600;
-            color: #b3e5ff;
+            color: var(--brand-blue);
             margin-bottom: 25px;
-            text-shadow: 0 0 10px rgba(0, 198, 255, 0.4);
+            text-shadow: 0 0 10px rgba(0, 198, 255, 0.2);
             animation: fadeIn 1.8s ease-out;
         }
 
         .container {
             width: 100%;
             max-width: 1200px;
-            background: rgba(255, 255, 255, var(--card-bg-opacity));
-            backdrop-filter: blur(var(--card-blur));
+            background: var(--container-bg);
+            backdrop-filter: blur(var(--glass-blur));
             padding: 40px;
             border-radius: 25px;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            box-shadow: var(--card-shadow);
             animation: fadeIn 0.8s ease-out;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid var(--card-border);
             margin-top: 0;
+            transition: background 0.5s ease, border 0.5s ease, box-shadow 0.5s ease;
         }
 
         @keyframes fadeIn {
@@ -119,10 +159,10 @@
 
         h2 {
             margin-bottom: 30px;
-            color: #fff;
+            color: var(--text-main);
             font-size: 32px;
             font-weight: 800;
-            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         /* ----------------- TOP ACTIONS ----------------- */
@@ -132,6 +172,54 @@
             justify-content: center;
             gap: 20px;
             flex-wrap: wrap;
+            align-items: center;
+        }
+
+        /* ----------------- THEME TOGGLE ----------------- */
+        .theme-toggle {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-main);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            font-size: 1.2rem;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            background: var(--container-bg);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .theme-toggle i {
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        body.dark-mode .theme-toggle i {
+            transform: rotate(360deg);
+        }
+
+        body.dark-mode .sun-icon {
+            display: block;
+        }
+
+        body.dark-mode .moon-icon {
+            display: none;
+        }
+
+        .sun-icon {
+            display: none;
+        }
+
+        .moon-icon {
+            display: block;
         }
 
         /* ----------------- SEARCH BAR ----------------- */
@@ -162,18 +250,18 @@
             width: 100%;
             padding: 16px 50px 16px 20px;
             border-radius: 50px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid var(--input-border);
+            background: var(--input-bg);
             backdrop-filter: blur(10px);
-            color: #fff;
+            color: var(--text-main);
             font-size: 16px;
             font-weight: 500;
             transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
 
         .search-input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
+            color: var(--text-muted);
         }
 
         .search-input:focus {
@@ -277,15 +365,24 @@
         }
 
         .logout-btn {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.05);
             box-shadow: none;
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            border: 1px solid var(--input-border);
+            color: var(--text-main);
+        }
+
+        body.dark-mode .logout-btn {
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .logout-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.1);
             transform: translateY(0);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark-mode .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
         /* ----------------- BOOK GRID ----------------- */
@@ -299,16 +396,16 @@
         }
 
         .book-card {
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--card-bg);
             backdrop-filter: blur(15px);
             border-radius: 20px;
             padding: 30px 25px;
             width: 100%;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            box-shadow: var(--card-shadow);
             transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
             position: relative;
             text-align: left;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--card-border);
             animation: cardFadeIn 0.5s ease-out backwards;
         }
 
@@ -388,7 +485,7 @@
 
         .book-card p {
             font-size: 15px;
-            color: #c0c0c0;
+            color: var(--text-muted);
             margin-bottom: 25px;
             min-height: 40px;
             line-height: 1.4;
@@ -441,7 +538,7 @@
         }
 
         .pagination-info {
-            color: rgba(255, 255, 255, 0.8);
+            color: var(--text-main);
             font-size: 14px;
             font-weight: 600;
             margin: 0 15px;
@@ -449,11 +546,11 @@
 
         .pagination-btn {
             padding: 10px 18px;
-            background: rgba(255, 255, 255, 0.15);
+            background: var(--input-bg);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid var(--input-border);
             border-radius: 10px;
-            color: #fff;
+            color: var(--text-main);
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
@@ -481,10 +578,10 @@
 
         .page-number {
             padding: 8px 14px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
             border-radius: 8px;
-            color: #fff;
+            color: var(--text-main);
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
@@ -510,7 +607,7 @@
         }
 
         .empty-state p {
-            color: #fff;
+            color: var(--text-main);
             font-size: 18px;
             margin-top: 20px;
         }
@@ -787,6 +884,10 @@
             <button id="addBookBtn" class="action-btn">
                 <i class="fas fa-plus"></i> Add New Book
             </button>
+            <button id="themeToggle" class="theme-toggle" title="Toggle Dark/Light Mode">
+                <i class="fas fa-moon moon-icon"></i>
+                <i class="fas fa-sun sun-icon"></i>
+            </button>
             <a href="{% url 'logout' %}" class="action-btn logout-btn">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </a>
@@ -937,8 +1038,16 @@
         const clearSearch = document.getElementById('clearSearch');
         const loadingSpinner = document.getElementById('loadingSpinner');
         const searchIcon = document.getElementById('searchIcon');
+        const themeToggle = document.getElementById('themeToggle');
 
-        let currentPage = {{ page_obj.number|default:1 }};
+        // --- Theme Toggle Logic ---
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.body.classList.toggle('dark-mode');
+            document.documentElement.classList.toggle('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+
+        let currentPage = {{ page_obj.number|default: 1 }};
         let searchTimeout;
 
         // --- AJAX Search Function ---
