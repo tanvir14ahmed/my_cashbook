@@ -270,6 +270,10 @@ def transaction_report_pdf(request, book_id):
     start_date_str = request.GET.get('start')
     end_date_str = request.GET.get('end')
 
+    # Set Dhaka timezone for current time references
+    dhaka_tz = pytz.timezone('Asia/Dhaka')
+    now_dhaka = timezone.now().astimezone(dhaka_tz)
+
     # --- UPDATED DATE HANDLING LOGIC START ---
     
     is_date_range_report = start_date_str and end_date_str
@@ -296,7 +300,7 @@ def transaction_report_pdf(request, book_id):
         # Case 2: Dates were NOT provided (All Transactions Report)
         # Fetch all transactions, no date filtering needed.
         start_date_display = "Start of Book"
-        end_date_display = datetime.now().strftime('%Y-%m-%d')
+        end_date_display = now_dhaka.strftime('%Y-%m-%d')
         
         # Filter: Empty dictionary means no date constraint, just book constraint
         transactions_filter = {}
@@ -344,7 +348,7 @@ def transaction_report_pdf(request, book_id):
     response = HttpResponse(content_type='application/pdf')
     
     # --- Filename Logic (Using the requested format) ---
-    report_timestamp = datetime.now().strftime('%d-%m-%Y_%H%M%S')
+    report_timestamp = now_dhaka.strftime('%d-%m-%Y_%H%M%S')
     # Clean the book name (e.g., "My Savings Book" -> "my_savings_book")
     safe_book_name = book.name.replace(' ', '_').lower().replace('.', '') 
 
@@ -366,26 +370,28 @@ def transaction_report_pdf(request, book_id):
     styles = getSampleStyleSheet()
     elements = []
 
-    # --- Custom Styles (Standardized and Updated for Logo Color) ---
+    # --- Custom Styles (Professional Bank Statement Style) ---
     
-    # Deep Purple color for the main logo text (Requirement 2)
-    DEEP_PURPLE = colors.HexColor("#4b0082") 
+    # Professional colors
+    ACCENT_COLOR = colors.HexColor("#003366") # Navy Blue
+    TEXT_COLOR = colors.HexColor("#333333")
+    LINE_COLOR = colors.HexColor("#cccccc")
     
-    # Logo Title Style (Requirement 2)
-    title_style = ParagraphStyle('Title', parent=styles['Heading1'], fontSize=18, fontName='Helvetica-Bold', alignment=0, textColor=DEEP_PURPLE)
+    # Logo Title Style
+    title_style = ParagraphStyle('Title', parent=styles['Heading1'], fontSize=20, fontName='Helvetica-Bold', alignment=0, textColor=ACCENT_COLOR)
     
     # Tagline Style
-    tagline_style = ParagraphStyle('Tagline', parent=styles['Normal'], fontSize=9, fontName='Helvetica-Oblique', textColor=colors.darkgrey, alignment=0)
+    tagline_style = ParagraphStyle('Tagline', parent=styles['Normal'], fontSize=9, fontName='Helvetica-Oblique', textColor=colors.grey, alignment=0)
     
-    info_style = ParagraphStyle('Info', parent=styles['Normal'], fontSize=10.5, fontName='Helvetica-Bold')
+    info_style = ParagraphStyle('Info', parent=styles['Normal'], fontSize=10, fontName='Helvetica-Bold', textColor=TEXT_COLOR)
     
-    # --- CHANGE 1: Darker Note Color ---
-    note_style = ParagraphStyle('Note', parent=styles['Normal'], fontSize=9.5, textColor=colors.grey) # Changed from colors.darkgrey to colors.grey
+    # Note Color
+    note_style = ParagraphStyle('Note', parent=styles['Normal'], fontSize=9, textColor=colors.grey)
     
-    timestamp_style = ParagraphStyle('Timestamp', parent=styles['Normal'], fontSize=9, alignment=0, textColor=colors.darkgrey)
+    timestamp_style = ParagraphStyle('Timestamp', parent=styles['Normal'], fontSize=8, alignment=0, textColor=colors.grey)
     
-    # --- New Title Style for Transaction Report ---
-    report_header_style = ParagraphStyle('ReportHeader', parent=styles['Heading2'], fontSize=14, fontName='Helvetica-Bold', alignment=1, spaceBefore=15, spaceAfter=8)
+    # Report Title Style
+    report_header_style = ParagraphStyle('ReportHeader', parent=styles['Heading2'], fontSize=14, fontName='Helvetica-Bold', alignment=0, spaceBefore=20, spaceAfter=10, textColor=ACCENT_COLOR)
 
     # --- 1. Logo/Title Section ---
     
@@ -397,40 +403,38 @@ def transaction_report_pdf(request, book_id):
 
     # --- Report Information Section (Left: book/dates, Right: Final Balance) ---
     
-    # Format the final balance text with the determined color (Requirement 1)
+    # Format the final balance text with the determined color
     final_balance_para = Paragraph(
-        f"<font size=14 color='{balance_color}'><b>Current Balance:</b> {total_balance_report:.2f} TK</font>", 
-        ParagraphStyle('Balance', parent=styles['Normal'], fontSize=14, alignment=2)
+        f"<font size=12 color='{TEXT_COLOR}'><b>Statement Balance:</b></font><br/><font size=16 color='{balance_color}'><b>{total_balance_report:.2f} TK</b></font>", 
+        ParagraphStyle('Balance', parent=styles['Normal'], alignment=2, leading=22)
     )
     
     # Data for the header info table 
     header_data = [
         [
-            Paragraph(f"<b>Book:</b> {book.name}", info_style),
+            Paragraph(f"<b>Account Holder:</b> {request.user.get_full_name() or request.user.username}<br/>"
+                      f"<b>Book Name:</b> {book.name}<br/>"
+                      f"<b>Period:</b> {start_date_display} to {end_date_display}", info_style),
             final_balance_para
-        ],
-        [
-            # Use the determined display dates
-            Paragraph(f"<b>Date Range:</b> {start_date_display} to {end_date_display}", info_style),
-            '' 
         ]
     ]
 
     page_width = A4[0] - 50
-    header_table = Table(header_data, colWidths=[page_width * 0.6, page_width * 0.4])
+    header_table = Table(header_data, colWidths=[page_width * 0.65, page_width * 0.35])
     header_table.setStyle(TableStyle([
         ('ALIGN', (1, 0), (1, 0), 'RIGHT'),
-        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-        ('LINEBELOW', (0, 1), (0, 1), 0.5, colors.HexColor("#6c5ce7")),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('LINEBELOW', (0, 0), (-1, 0), 1.5, ACCENT_COLOR),
         ('LEFTPADDING', (0, 0), (-1, -1), 0),
         ('RIGHTPADDING', (0, 0), (-1, -1), 0),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 10),
     ]))
     
     elements.append(header_table)
-    elements.append(Spacer(1, 15))
+    elements.append(Spacer(1, 10))
     
-    # --- CHANGE 2: Add Transaction Report Heading ---
-    elements.append(Paragraph("Transaction Report", report_header_style))
+    # Statement Header
+    elements.append(Paragraph("Account Statement - Activity Detail", report_header_style))
 
     # --- Transaction Table Data ---
     data = [["Date", "Type", "Amount", "Running Balance", "Note"]]
@@ -472,30 +476,26 @@ def transaction_report_pdf(request, book_id):
 
     table = Table(data, colWidths=col_widths, repeatRows=1)
     
-    # Enhanced Table Style
+    # Professional Bank Table Style
     table_style = TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#6c5ce7")), # Header background
+        ('BACKGROUND', (0, 0), (-1, 0), ACCENT_COLOR), # Header background
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0, 0), (-1, 0), 10.5),
+        ('FONTSIZE', (0, 0), (-1, 0), 10),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
-        ('ALIGN', (2, 0), (3, 0), 'RIGHT'), # Align Amount/Balance Headers right
         ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
-        ('TOPPADDING', (0, 0), (-1, 0), 8),
-        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#e0e0e0")), # Lighter grid lines
-        ('BOX', (0, 0), (-1, -1), 1, colors.HexColor("#6c5ce7")), # Full table border
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 10),
+        ('TOPPADDING', (0, 0), (-1, 0), 10),
+        ('LINEBELOW', (0, 0), (-1, 0), 2, ACCENT_COLOR),
+        ('LINEBELOW', (0, 0), (-1, -1), 0.5, LINE_COLOR),
     ])
 
     for i in range(1, len(data)):
         # Zebra stripping for rows
         bg = colors.HexColor("#f4f4f8") if i % 2 == 0 else colors.white 
         table_style.add('BACKGROUND', (0, i), (-1, i), bg)
-        # Content alignment
-        table_style.add('ALIGN', (2, i), (3, i), 'RIGHT') 
-        table_style.add('ALIGN', (0, i), (1, i), 'CENTER')
-        table_style.add('ALIGN', (4, i), (4, i), 'LEFT')
-        table_style.add('FONTSIZE', (0, i), (-1, i), 9.5)
+        table_style.add('ALIGN', (0, i), (-1, i), 'CENTER')
+        table_style.add('FONTSIZE', (0, i), (-1, i), 9)
 
     table.setStyle(table_style)
     elements.append(table)
@@ -518,9 +518,9 @@ def transaction_report_pdf(request, book_id):
     summary_table.setStyle(TableStyle([
         ('ALIGN', (1, 0), (1, 1), 'RIGHT'),
         ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-        ('LINEBELOW', (0, 1), (-1, 1), 0.5, colors.HexColor("#6c5ce7")), # Separator line
-        ('TOPPADDING', (0, 0), (-1, 1), 5),
-        ('BOTTOMPADDING', (0, 0), (-1, 1), 5),
+        ('LINEBELOW', (0, 1), (-1, 1), 1, ACCENT_COLOR),
+        ('TOPPADDING', (0, 0), (-1, 1), 8),
+        ('BOTTOMPADDING', (0, 0), (-1, 1), 8),
         ('LEFTPADDING', (0, 0), (-1, -1), 0),
         ('RIGHTPADDING', (0, 0), (-1, -1), 0),
     ]))
@@ -537,11 +537,28 @@ def transaction_report_pdf(request, book_id):
     
     
     elements.append(Paragraph(
-    f"Report generated on (Time: Dhaka/Bangladesh): {datetime.now().strftime('%d %B, %Y (%I:%M %p)')}",
-    timestamp_style
+        f"Statement generated on: {now_dhaka.strftime('%d %B, %Y at %I:%M %p')} (Dhaka Time)",
+        timestamp_style
     ))
 
     elements.append(footer_note_para)
 
-    pdf.build(elements)
+    # --- Page Footer Function (Meet the Developer & Page Numbers) ---
+    def add_footer(canvas, doc):
+        canvas.saveState()
+        canvas.setFont('Helvetica', 8)
+        canvas.setFillColor(colors.grey)
+        canvas.drawString(doc.leftMargin, 20, f"Page {doc.page}")
+
+        from reportlab.platypus import Paragraph
+        from reportlab.lib.styles import ParagraphStyle
+        link_style = ParagraphStyle('FooterLink', fontSize=8, alignment=2)
+        link_text = '<font color="blue"><u><a href="https://tanvir.codelab-by-tnv.top/">Meet The Developer</a></u></font>'
+        link_para = Paragraph(link_text, link_style)
+        w, h = link_para.wrap(doc.width, doc.bottomMargin)
+        link_para.drawOn(canvas, doc.leftMargin, 20)
+        canvas.restoreState()
+
+    pdf.build(elements, onFirstPage=add_footer, onLaterPages=add_footer)
+
     return response

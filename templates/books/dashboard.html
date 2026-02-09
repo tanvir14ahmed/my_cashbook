@@ -101,6 +101,7 @@
             font-size: 60px;
             background: var(--title-gradient);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: 800;
             letter-spacing: 4px;
@@ -419,54 +420,6 @@
                 opacity: 1;
                 transform: translateY(0) scale(1);
             }
-        }
-
-        .book-card:nth-child(1) {
-            animation-delay: 0.05s;
-        }
-
-        .book-card:nth-child(2) {
-            animation-delay: 0.1s;
-        }
-
-        .book-card:nth-child(3) {
-            animation-delay: 0.15s;
-        }
-
-        .book-card:nth-child(4) {
-            animation-delay: 0.2s;
-        }
-
-        .book-card:nth-child(5) {
-            animation-delay: 0.25s;
-        }
-
-        .book-card:nth-child(6) {
-            animation-delay: 0.3s;
-        }
-
-        .book-card:nth-child(7) {
-            animation-delay: 0.35s;
-        }
-
-        .book-card:nth-child(8) {
-            animation-delay: 0.4s;
-        }
-
-        .book-card:nth-child(9) {
-            animation-delay: 0.45s;
-        }
-
-        .book-card:nth-child(10) {
-            animation-delay: 0.5s;
-        }
-
-        .book-card:nth-child(11) {
-            animation-delay: 0.55s;
-        }
-
-        .book-card:nth-child(12) {
-            animation-delay: 0.6s;
         }
 
         .book-card:hover {
@@ -813,7 +766,48 @@
             transform: translateX(0);
         }
 
-        /* ----------------- Responsive ----------------- */
+        /* ----------------- SKELETON LOADING ----------------- */
+        .skeleton {
+            background: linear-gradient(90deg, var(--card-bg) 25%, var(--card-border) 50%, var(--card-bg) 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+            border-radius: 20px;
+        }
+
+        @keyframes skeleton-loading {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        .skeleton-card {
+            height: 200px;
+            width: 100%;
+            border-radius: 20px;
+            margin-bottom: 30px;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
             .app-title-dashboard {
                 font-size: 40px;
@@ -906,12 +900,24 @@
             </div>
         </div>
 
+        <!-- Skeleton Loading Container -->
+        <div id="content-loader" style="margin-top: 2rem;">
+            <div class="books-grid">
+                <div class="skeleton skeleton-card"></div>
+                <div class="skeleton skeleton-card"></div>
+                <div class="skeleton skeleton-card"></div>
+                <div class="skeleton skeleton-card"></div>
+                <div class="skeleton skeleton-card"></div>
+                <div class="skeleton skeleton-card"></div>
+            </div>
+        </div>
+
         <!-- Books Grid Container -->
-        <div id="booksContainer">
+        <div id="booksContainer" style="display: none;">
             {% if page_obj %}
             <div class="books-grid" id="booksGrid">
                 {% for book in page_obj %}
-                <div class="book-card">
+                <div class="book-card" style="animation-delay: {{ forloop.counter0 }}00ms;">
                     <h3><i class="fas fa-book-open"></i> {{ book.name }}</h3>
                     <p>{% if book.description %}{{ book.description }}{% else %}No description provided.{% endif %}</p>
                     <div class="book-actions">
@@ -1047,6 +1053,20 @@
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
         });
 
+        // --- Skeleton Loading Reveal ---
+        window.addEventListener('DOMContentLoaded', () => {
+            const loader = document.getElementById('content-loader');
+            const mainContent = document.getElementById('booksContainer');
+
+            if (loader && mainContent) {
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                    mainContent.style.display = 'block';
+                    mainContent.classList.add('fade-in');
+                }, 800); // 800ms for premium loading feel
+            }
+        });
+
         let currentPage = {{ page_obj.number|default:1 }};
         let searchTimeout;
 
@@ -1115,7 +1135,7 @@
             let booksHTML = '';
             data.books.forEach((book, index) => {
                 booksHTML += `
-                <div class="book-card" style="animation-delay: ${index * 0.05}s;">
+                <div class="book-card" style="animation-delay: ${index * 100}ms;">
                     <h3><i class="fas fa-book-open"></i> ${escapeHtml(book.name)}</h3>
                     <p>${escapeHtml(book.description)}</p>
                     <div class="book-actions">
