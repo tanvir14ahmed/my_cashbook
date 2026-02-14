@@ -11,9 +11,8 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
 from reportlab.lib import colors
 from .models import Transaction, Book
-from accounts.models import Profile
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import Table, TableStyle, Paragraph, SimpleDocTemplate, Spacer, PageBreak
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.dateparse import parse_date
@@ -23,6 +22,8 @@ from django.utils import timezone
 import pytz
 from decimal import Decimal
 from datetime import datetime
+from django.db.models import Sum, Case, When, DecimalField, F, Value
+from django.db.models.functions import Coalesce
 
 
 @login_required
@@ -37,7 +38,18 @@ def dashboard_view(request):
         books = books.filter(name__icontains=search_query)
     
     # Sort books alphabetically by name (case-insensitive)
-    books = books.order_by('name')
+    books = books.annotate(
+        total_balance=Coalesce(
+            Sum(
+                Case(
+                    When(transactions__type='deposit', then=F('transactions__amount')),
+                    When(transactions__type='withdraw', then=-F('transactions__amount')),
+                    output_field=DecimalField(),
+                )
+            ),
+            Value(0, output_field=DecimalField()),
+        )
+    ).order_by('name')
     
     # Pagination: 12 books per page
     paginator = Paginator(books, 12)
@@ -56,6 +68,7 @@ def dashboard_view(request):
                 'id': book.id,
                 'name': book.name,
                 'description': book.description or 'No description provided.',
+                'total_balance': str(book.total_balance),
             })
         
         return JsonResponse({
