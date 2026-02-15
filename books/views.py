@@ -334,15 +334,21 @@ def transaction_report_pdf(request, book_id):
     # Variables for Total Deposit and Withdrawal
     total_deposit = Decimal('0.00')
     total_withdrawal = Decimal('0.00')
+    total_deposit_count = 0
+    total_withdrawal_count = 0
 
     for t in transactions_list:
         if t.type.lower() == "deposit":
             running_balance += t.amount
             total_deposit += t.amount
+            total_deposit_count += 1
         else:
             running_balance -= t.amount
             total_withdrawal += t.amount
+            total_withdrawal_count += 1
         running_balances.append(running_balance)
+
+    total_transaction_count = total_deposit_count + total_withdrawal_count
 
     # Reverse lists for latest-first display in PDF
     transactions_display = transactions_list[::-1]
@@ -518,13 +524,17 @@ def transaction_report_pdf(request, book_id):
     
     summary_data = [
         [
-            Paragraph("<b>Total Deposits:</b>", info_style),
+            Paragraph(f"<b>Total Deposits ({total_deposit_count}):</b>", info_style),
             Paragraph(f"<font color='#27ae60'><b>{total_deposit:.2f} TK</b></font>", info_style)
         ],
         [
-            Paragraph("<b>Total Withdrawals:</b>", info_style),
+            Paragraph(f"<b>Total Withdrawals ({total_withdrawal_count}):</b>", info_style),
             Paragraph(f"<font color='#e74c3c'><b>{total_withdrawal:.2f} TK</b></font>", info_style)
         ],
+        [
+            Paragraph(f"<font size=9 color='#808080'>Total Transaction Count: {total_transaction_count}</font>", info_style),
+            Paragraph("", info_style) # Empty cell for alignment
+        ]
     ]
     
     summary_table = Table(summary_data, colWidths=[page_width * 0.7, page_width * 0.3])
