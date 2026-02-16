@@ -14,5 +14,7 @@ urlpatterns = [
     path('book/<int:book_id>/edit-transaction/<int:transaction_id>/', views.edit_transaction_view, name='edit_transaction'),
     path('book/<int:book_id>/delete-transaction/<int:transaction_id>/', views.delete_transaction_view, name='delete_transaction'),
     path('book/<int:book_id>/report/', views.transaction_report_pdf, name='transaction_report_pdf'),
+    path('validate-bid/', views.validate_bid, name='validate_bid'),
+    path('transfer-funds/', views.transfer_funds, name='transfer_funds'),
     
 ]

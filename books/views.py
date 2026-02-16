@@ -2,26 +2,21 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Book, Transaction
 from django.contrib import messages
-from decimal import Decimal
-from django.http import HttpResponse
+from decimal import Decimal, InvalidOperation
+from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.template.loader import render_to_string
-from datetime import datetime
+from datetime import datetime, date
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
 from reportlab.lib import colors
-from .models import Transaction, Book
 from reportlab.platypus import Table, TableStyle, Paragraph, SimpleDocTemplate, Spacer, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from django.core.paginator import Paginator
-from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.dateparse import parse_date
-from django.http import HttpResponseBadRequest
-from datetime import date # Import date
 from django.utils import timezone
 import pytz
-from decimal import Decimal
-from datetime import datetime
+from django.db import transaction as db_transaction
 from django.db.models import Sum, Case, When, DecimalField, F, Value
 from django.db.models.functions import Coalesce
 
@@ -67,6 +62,7 @@ def dashboard_view(request):
             books_data.append({
                 'id': book.id,
                 'name': book.name,
+                'bid': book.bid,
                 'description': book.description or 'No description provided.',
                 'total_balance': str(book.total_balance),
             })
@@ -585,3 +581,91 @@ def transaction_report_pdf(request, book_id):
     pdf.build(elements, onFirstPage=add_footer, onLaterPages=add_footer)
 
     return response
+
+@login_required
+def validate_bid(request):
+    bid = request.GET.get('bid')
+    if not bid:
+        return JsonResponse({'success': False, 'message': 'BID is required.'})
+    
+    try:
+        recipient_book = Book.objects.get(bid=bid)
+        return JsonResponse({
+            'success': True,
+            'owner_name': recipient_book.user.profile.display_name or recipient_book.user.username,
+            'book_name': recipient_book.name
+        })
+    except Book.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'Invalid BID. Book not found.'})
+
+@login_required
+def transfer_funds(request):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'message': 'Method not allowed.'})
+    
+    sender_book_id = request.POST.get('sender_book_id')
+    recipient_bid = request.POST.get('recipient_bid')
+    amount_str = request.POST.get('amount')
+    user_note = request.POST.get('note', '').strip()
+    
+    try:
+        amount = Decimal(amount_str)
+        if amount <= 0:
+            return JsonResponse({'success': False, 'message': 'Amount must be greater than zero.'})
+    except (ValueError, TypeError, InvalidOperation):
+        return JsonResponse({'success': False, 'message': 'Invalid amount format.'})
+    
+    sender_book = get_object_or_404(Book, id=sender_book_id, user=request.user)
+    
+    try:
+        recipient_book = Book.objects.get(bid=recipient_bid)
+    except Book.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'Recipient Book not found.'})
+    
+    if sender_book == recipient_book:
+        return JsonResponse({'success': False, 'message': 'Cannot transfer to the same book.'})
+    
+    # Calculate current balance of sender book
+    sender_balance = sender_book.transactions.all().aggregate(
+        balance=Coalesce(
+            Sum(Case(
+                When(type='deposit', then=F('amount')),
+                When(type='withdraw', then=-F('amount')),
+                output_field=DecimalField()
+            )),
+            Value(0, output_field=DecimalField())
+        )
+    )['balance']
+    
+    if sender_balance < amount:
+        return JsonResponse({'success': False, 'message': 'Insufficient balance in sender book.'})
+    
+    try:
+        with db_transaction.atomic():
+            # 1. Create Withdrawal for Sender
+            sender_note = f"Transfer to BID-{recipient_bid}"
+            if user_note:
+                sender_note += f": {user_note}"
+            
+            Transaction.objects.create(
+                book=sender_book,
+                amount=amount,
+                type='withdraw',
+                note=sender_note
+            )
+            
+            # 2. Create Deposit for Recipient
+            recipient_note = f"Transfer from BID-{sender_book.bid}"
+            if user_note:
+                recipient_note += f": {user_note}"
+                
+            Transaction.objects.create(
+                book=recipient_book,
+                amount=amount,
+                type='deposit',
+                note=recipient_note
+            )
+            
+        return JsonResponse({'success': True, 'message': 'Transfer successful!'})
+    except Exception as e:
+        return JsonResponse({'success': False, 'message': f'Transfer failed: {str(e)}'})
