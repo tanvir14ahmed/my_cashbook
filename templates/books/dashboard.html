@@ -23,42 +23,79 @@
         })();
     </script>
     <style>
-        /* ----------------- VARIABLES & RESET ----------------- */
         :root {
-            /* Brand Colors */
-            --brand-blue: #00c6ff;
-            --brand-purple: #4e4376;
-            --brand-dark: #2b5876;
-            --success-color: #1abc9c;
-            --error-color: #e74c3c;
-
-            /* Theme Variables (Light Mode Default) */
-            --bg-gradient: linear-gradient(90deg, #e0f2f7, #f0f4f8, #e8f0f2);
-            --text-main: #2c3e50;
-            --text-muted: #546e7a;
-            --container-bg: rgba(255, 255, 255, 0.8);
-            --card-bg: rgba(255, 255, 255, 0.9);
-            --card-border: rgba(0, 0, 0, 0.05);
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            --input-bg: rgba(255, 255, 255, 0.9);
-            --input-border: rgba(0, 0, 0, 0.1);
-            --glass-blur: 20px;
-            --title-gradient: linear-gradient(90deg, #2b5876, #4e4376);
+            /* Classic Metallic - Light Mode */
+            --brand-blue: #A38347; /* Gold */
+            --brand-purple: #8A6D3B; /* Deep Gold */
+            --brand-dark: #A38347;
+            --primary-color: #A38347; 
+            --primary-dark: #8A6D3B; 
+            --success-color: #4A8B58;
+            --error-color: #B83A42;
+            --danger-color: #B83A42;
+            --warning-color: #C0A062;
+            
+            --bg-color: #F4F4F5; /* Polished Silver */
+            --bg-gradient: #F4F4F5;
+            --text-color: #1C1C1E;
+            --text-main: #1C1C1E;
+            --text-dark: #1C1C1E;
+            --text-light: #8E8E93;
+            --text-muted: #8E8E93;
+            
+            --card-bg: #FFFFFF;
+            --container-bg: #FFFFFF;
+            --card-bg-opacity: 0.95;
+            --card-blur: 12px;
+            
+            --card-border: #D1D1D6;
+            --input-bg: #FFFFFF;
+            --input-border: #D1D1D6;
+            
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --light-gray: #E5E5EA;
+            --table-hover: #F4F4F5;
+            --title-gradient: #A38347;
+            --modal-overlay: rgba(0, 0, 0, 0.5);
         }
 
         body.dark-mode {
-            /* Theme Variables (Dark Mode) */
-            --bg-gradient: linear-gradient(90deg, #1a1a2e, #16213e, #0f3460, #1a1a2e);
-            --text-main: #e0e0e0;
-            --text-muted: #a0a0a0;
-            --container-bg: rgba(255, 255, 255, 0.05);
-            --card-bg: rgba(255, 255, 255, 0.08);
-            --card-border: rgba(255, 255, 255, 0.1);
-            --card-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-            --input-bg: rgba(255, 255, 255, 0.1);
-            --input-border: rgba(255, 255, 255, 0.2);
-            --title-gradient: linear-gradient(90deg, #e0f2f7, #a7d9f7, #5cb8e6, #2196f3);
+            /* Classic Metallic - Dark Mode */
+            --brand-blue: #C0A062; /* Bright Gold */
+            --brand-purple: #A38347;
+            --brand-dark: #C0A062;
+            --primary-color: #C0A062; 
+            --primary-dark: #A38347; 
+            --success-color: #5B8A62;
+            --error-color: #C94A53;
+            --danger-color: #C94A53;
+            --warning-color: #D4AF37;
+            
+            --bg-color: #121214; /* Deep Titanium */
+            --bg-gradient: #121214;
+            --text-color: #E5E5EA;
+            --text-main: #E5E5EA;
+            --text-dark: #E5E5EA;
+            --text-light: #A1A1AA;
+            --text-muted: #A1A1AA;
+            
+            --card-bg: #1C1C1E; /* Gunmetal */
+            --container-bg: #1C1C1E;
+            
+            --card-border: #3A3A3C;
+            --input-bg: rgba(255, 255, 255, 0.05);
+            --input-border: #3A3A3C;
+            
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.6);
+            --light-gray: rgba(255, 255, 255, 0.05);
+            --table-hover: rgba(255, 255, 255, 0.1);
+            --title-gradient: #C0A062;
+            --modal-overlay: rgba(0, 0, 0, 0.8);
         }
+        /* ----------------- VARIABLES & RESET ----------------- */
+        
+
+        
 
         * {
             margin: 0;
@@ -70,8 +107,6 @@
         /* ----------------- BASE & BACKGROUND ----------------- */
         body {
             background: var(--bg-gradient);
-            background-size: 400% 400%;
-            animation: gradientBG 40s ease infinite;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -82,30 +117,15 @@
             transition: background 0.5s ease, color 0.5s ease;
         }
 
-        @keyframes gradientBG {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
         /* App title styles */
         .app-title-dashboard {
             font-size: 60px;
-            background: var(--title-gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--title-gradient);
+            /* Solid Neon Lime instead of gradient */
             font-weight: 800;
             letter-spacing: 4px;
-            text-shadow: 0 5px 15px rgba(100, 200, 255, 0.3);
+            text-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
+            /* Match neon lime */
             margin-bottom: 5px;
             animation: fadeInDown 1.5s ease-out;
         }
@@ -115,7 +135,8 @@
             font-weight: 600;
             color: var(--brand-blue);
             margin-bottom: 25px;
-            text-shadow: 0 0 10px rgba(0, 198, 255, 0.2);
+            text-shadow: 0 0 10px rgba(39, 39, 42, 0.8);
+            /* Match neon lime */
             animation: fadeIn 1.8s ease-out;
         }
 
@@ -123,7 +144,6 @@
             width: 100%;
             max-width: 1200px;
             background: var(--container-bg);
-            backdrop-filter: blur(var(--glass-blur));
             padding: 40px;
             border-radius: 25px;
             box-shadow: var(--card-shadow);
@@ -348,10 +368,11 @@
         }
 
         .action-btn {
-            background: linear-gradient(135deg, var(--brand-purple), #764ba2);
-            color: #fff;
+            background: var(--brand-blue);
+            color: #FFFFFF;
+            /* Deep Forest text inside lime button */
             text-decoration: none;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 20px rgba(39, 39, 42, 0.8);
             display: flex;
             align-items: center;
             gap: 8px;
@@ -361,8 +382,9 @@
 
         .action-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
-            background: linear-gradient(135deg, #764ba2, var(--brand-purple));
+            box-shadow: 0 12px 25px rgba(79, 70, 229, 0.3);
+            background: var(--brand-purple);
+            /* Hover lime */
         }
 
         .logout-btn {
@@ -424,8 +446,9 @@
 
         .book-card:hover {
             transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-            border-color: rgba(0, 198, 255, 0.3);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+            border-color: rgba(79, 70, 229, 0.5);
+            /* Hover neon lime */
         }
 
         .book-card h3 {
@@ -464,8 +487,10 @@
         }
 
         .view-btn {
-            background: var(--success-color);
-            box-shadow: 0 4px 10px rgba(46, 204, 113, 0.4);
+            background: var(--brand-blue);
+            color: #09090B !important;
+            /* Deep forest text */
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.4);
         }
 
         .delete-btn {
@@ -549,9 +574,11 @@
         }
 
         .page-number.active {
-            background: linear-gradient(135deg, var(--brand-blue), #0099cc);
+            background: var(--brand-blue);
+            color: #FFFFFF;
+            /* Deep forest text */
             border-color: var(--brand-blue);
-            box-shadow: 0 4px 12px rgba(0, 198, 255, 0.4);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
         }
 
         .empty-state {
@@ -596,15 +623,16 @@
         }
 
         .modal-content {
-            background-color: #fff;
+            background-color: var(--container-bg);
             margin: 10% auto;
             padding: 30px;
             border-radius: 20px;
             max-width: 450px;
             text-align: center;
-            color: var(--text-dark);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            color: var(--text-main);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
             animation: modalSlideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid var(--card-border);
         }
 
         @keyframes modalSlideDown {
@@ -653,18 +681,18 @@
             margin-bottom: 5px;
             font-weight: 700;
             font-size: 14px;
-            color: var(--text-dark);
+            color: var(--text-main);
         }
 
         .add-book-form input[type="text"],
         .add-book-form textarea {
             width: 100%;
             padding: 12px;
-            border: 1px solid #ccc;
+            border: 1px solid var(--input-border);
             border-radius: 8px;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            background: var(--input-bg);
             font-size: 16px;
-            color: var(--text-dark);
+            color: var(--text-main);
         }
 
         .add-book-form textarea {
@@ -697,17 +725,18 @@
 
         .submit-btn {
             background: var(--brand-blue);
-            color: #fff;
+            color: #FFFFFF;
             flex-grow: 1;
         }
 
         .submit-btn:hover {
-            background: #0099cc;
+            background: var(--brand-purple);
         }
 
         .cancel-btn {
-            background: #e0e0e0;
-            color: var(--text-dark);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+            border: 1px solid var(--input-border);
         }
 
         .confirm-btn:hover {
@@ -715,7 +744,7 @@
         }
 
         .cancel-btn:hover {
-            background: #ccc;
+            background: rgba(255, 255, 255, 0.2);
         }
 
         #deleteModal .modal-actions {
@@ -724,47 +753,6 @@
 
         #deleteModal .modal-content button {
             margin: 10px;
-        }
-
-        /* ----------------- TRANSFER MODAL ----------------- */
-        .bid-badge {
-            background: rgba(0, 198, 255, 0.1);
-            color: var(--brand-blue);
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 700;
-            display: inline-block;
-            margin-bottom: 8px;
-            border: 1px solid rgba(0, 198, 255, 0.2);
-        }
-
-        .transfer-btn {
-            background: linear-gradient(135deg, #FF8C00, #FFA500);
-            box-shadow: 0 4px 10px rgba(255, 140, 0, 0.4);
-        }
-
-        .transfer-btn:hover {
-            background: linear-gradient(135deg, #FFA500, #FF8C00);
-            box-shadow: 0 6px 15px rgba(255, 140, 0, 0.6);
-        }
-
-        .transfer-step {
-            display: none;
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        .transfer-step.active {
-            display: block;
-        }
-
-        .recipient-info-box {
-            background: rgba(0, 198, 255, 0.05);
-            border: 1px dashed var(--brand-blue);
-            padding: 15px;
-            border-radius: 12px;
-            margin: 15px 0;
-            text-align: left;
         }
 
         /* ----------------- MESSAGE CARDS ----------------- */
@@ -975,15 +963,10 @@
                         <a href="{% url 'book_detail' book.id %}" class="view-btn">
                             <i class="fas fa-eye"></i> View
                         </a>
-                        <button class="action-btn transfer-btn"
-                            onclick="openTransferModal('{{ book.id }}', '{{ book.name|escapejs }}', '{{ book.total_balance|default:0 }}')"
-                            style="padding: 10px 16px; font-size: 14px; box-shadow: none;">
-                            <i class="fas fa-paper-plane"></i> Send
-                        </button>
-                        <a href="#" class="delete-btn" onclick="confirmDelete('{{ book.id }}')"
+                        <button class="action-btn delete-btn" onclick="openDeleteModal('{{ book.id }}')"
                             style="padding: 10px 16px;">
-                            <i class="fas fa-trash-alt"></i>
-                        </a>
+                            <i class="fas fa-trash-alt"></i> Delete
+                        </button>
                     </div>
                 </div>
                 {% endfor %}
@@ -1052,6 +1035,7 @@
         </div>
     </div>
 
+    <!-- Delete Confirmation Modal -->
     <div id="deleteModal" class="modal">
         <div class="modal-content">
             <p>⚠️ Are you sure you want to **PERMANENTLY DELETE** this book?</p>
@@ -1086,70 +1070,6 @@
                     <button type="button" class="cancel-btn" onclick="closeModal('addBookModal')">Cancel</button>
                 </div>
             </form>
-        </div>
-    </div>
-
-    <!-- P2P Transfer Modal -->
-    <div id="transferModal" class="modal">
-        <div class="modal-content" style="max-width: 500px;">
-            <span class="close-btn" onclick="closeModal('transferModal')">&times;</span>
-            <h3 id="transferModalTitle"><i class="fas fa-paper-plane"></i> Send Money</h3>
-            <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 20px;">
-                From: <span id="senderBookName" style="color: var(--brand-blue); font-weight: 700;"></span>
-            </p>
-
-            <!-- Step 1: Find BID -->
-            <div id="transferStep1" class="transfer-step active">
-                <label
-                    style="display: block; text-align: left; font-weight: 700; font-size: 14px; margin-bottom: 8px;">Enter
-                    Recipient BID:</label>
-                <div style="position: relative;">
-                    <input type="text" id="recipientBidInput" placeholder="6-digit BID (e.g. 123456)" maxlength="6"
-                        style="width: 100%; margin-bottom: 15px; padding: 12px; border: 1px solid #ccc; border-radius: 8px; color: #333;">
-                    <button id="validateBidBtn" class="submit-btn" style="width: 100%; margin-top: 5px;">
-                        Next: Verify Recipient <i class="fas fa-search"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Step 2: Confirmation & Amount -->
-            <div id="transferStep2" class="transfer-step">
-                <div class="recipient-info-box">
-                    <p style="margin-bottom: 5px; color: var(--text-main);"><i class="fas fa-user-check"></i>
-                        <b>Receiver:</b> <span id="recipientOwnerName"></span>
-                    </p>
-                    <p style="margin-bottom: 0px; font-size: 13px; color: var(--text-muted);"><i
-                            class="fas fa-book"></i> <b>Book:</b> <span id="recipientBookName"></span></p>
-                </div>
-
-                <label
-                    style="display: block; text-align: left; font-weight: 700; font-size: 14px; margin-top: 15px; margin-bottom: 8px;">Amount
-                    (TK):</label>
-                <input type="number" id="transferAmount" step="0.01" placeholder="0.00"
-                    style="width: 100%; margin-bottom: 15px; padding: 12px; border: 1px solid #ccc; border-radius: 8px; color: #333;">
-
-                <label
-                    style="display: block; text-align: left; font-weight: 700; font-size: 14px; margin-bottom: 8px;">Note
-                    (Optional):</label>
-                <input type="text" id="transferNote" placeholder="e.g., Dinner, Loan return"
-                    style="width: 100%; margin-bottom: 20px; padding: 12px; border: 1px solid #ccc; border-radius: 8px; color: #333;">
-
-                <div class="modal-actions">
-                    <button id="executeTransferBtn" class="submit-btn" style="background: var(--success-color);">Confirm
-                        & Send <i class="fas fa-check-circle"></i></button>
-                    <button type="button" class="cancel-btn" onclick="goToStep(1)">Back</button>
-                </div>
-            </div>
-
-            <!-- Step 3: Success Animation -->
-            <div id="transferStep3" class="transfer-step">
-                <div style="padding: 20px; text-align: center;">
-                    <i class="fas fa-check-circle fa-4x" style="color: var(--success-color); margin-bottom: 15px;"></i>
-                    <h3 style="color: var(--success-color);">Transfer Successful!</h3>
-                    <p id="transferSuccessMsg" style="font-size: 14px; color: #333;"></p>
-                    <button class="submit-btn" onclick="location.reload()" style="margin-top: 20px;">Done</button>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -1195,7 +1115,7 @@
             }
         });
 
-        let currentPage = {{ page_obj.number|default:1 }};
+        let currentPage = "{{ page_obj.number|default:1 }}";
         let searchTimeout;
 
         // --- AJAX Search Function ---
@@ -1280,12 +1200,9 @@
                         <a href="/book/${book.id}/" class="view-btn">
                             <i class="fas fa-eye"></i> View
                         </a>
-                        <button class="action-btn transfer-btn" onclick="openTransferModal(${book.id}, '${escapeHtml(book.name).replace(/'/g, "\\'")}', ${parseFloat(book.total_balance || 0)})" style="padding: 10px 16px; font-size: 14px; box-shadow: none;">
-                            <i class="fas fa-paper-plane"></i> Send
+                        <button class="action-btn delete-btn" onclick="openDeleteModal(${book.id})" style="padding: 10px 16px; font-size: 14px; box-shadow: none;">
+                            <i class="fas fa-trash-alt"></i> Delete
                         </button>
-                        <a href="#" class="delete-btn" onclick="confirmDelete(${book.id})" style="padding: 10px 16px;">
-                            <i class="fas fa-trash-alt"></i>
-                        </a>
                     </div>
                 </div>
             `;
@@ -1417,7 +1334,7 @@
         attachPaginationListeners();
 
         // --- Delete Modal Logic ---
-        function confirmDelete(bookId) {
+        function openDeleteModal(bookId) {
             deleteForm.action = `/delete/${bookId}/`;
             deleteModal.style.display = 'block';
         }
@@ -1441,109 +1358,6 @@
             });
         }
 
-        // --- Transfer Modal Logic ---
-        let transferSenderId = null;
-        let transferSenderBalance = 0;
-
-        function openTransferModal(bookId, bookName, balance) {
-            transferSenderId = bookId;
-            transferSenderBalance = balance;
-            document.getElementById('senderBookName').innerText = bookName;
-
-            // Reset modal
-            goToStep(1);
-            document.getElementById('recipientBidInput').value = '';
-            document.getElementById('transferAmount').value = '';
-            document.getElementById('transferNote').value = '';
-
-            document.getElementById('transferModal').style.display = 'block';
-        }
-
-        function goToStep(step) {
-            document.querySelectorAll('.transfer-step').forEach(s => s.classList.remove('active'));
-            document.getElementById('transferStep' + step).classList.add('active');
-        }
-
-        document.getElementById('validateBidBtn').addEventListener('click', function () {
-            const bid = document.getElementById('recipientBidInput').value.trim();
-            if (bid.length !== 6) {
-                showToast('Please enter a valid 6-digit BID.', 'error');
-                return;
-            }
-
-            const btn = this;
-            const originalHTML = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
-            btn.disabled = true;
-
-            fetch(`/validate-bid/?bid=${bid}`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        document.getElementById('recipientOwnerName').innerText = data.owner_name;
-                        document.getElementById('recipientBookName').innerText = data.book_name;
-                        goToStep(2);
-                    } else {
-                        showToast(data.message, 'error');
-                    }
-                })
-                .catch(err => showToast('Lookup failed. Try again.', 'error'))
-                .finally(() => {
-                    btn.innerHTML = originalHTML;
-                    btn.disabled = false;
-                });
-        });
-
-        document.getElementById('executeTransferBtn').addEventListener('click', function () {
-            const bid = document.getElementById('recipientBidInput').value.trim();
-            const amount = parseFloat(document.getElementById('transferAmount').value);
-            const note = document.getElementById('transferNote').value.trim();
-
-            if (isNaN(amount) || amount <= 0) {
-                showToast('Enter a valid amount.', 'error');
-                return;
-            }
-
-            if (amount > transferSenderBalance) {
-                showToast('Insufficient balance!', 'error');
-                return;
-            }
-
-            const btn = this;
-            const originalHTML = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-            btn.disabled = true;
-
-            const formData = new FormData();
-            formData.append('sender_book_id', transferSenderId);
-            formData.append('recipient_bid', bid);
-            formData.append('amount', amount);
-            formData.append('note', note);
-            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
-
-            fetch('/transfer-funds/', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        document.getElementById('transferSuccessMsg').innerText = `Successfully sent ${amount.toFixed(2)} TK to ${document.getElementById('recipientOwnerName').innerText}.`;
-                        goToStep(3);
-                    } else {
-                        showToast(data.message, 'error');
-                    }
-                })
-                .catch(err => showToast('Transfer failed. Please check your connection.', 'error'))
-                .finally(() => {
-                    btn.innerHTML = originalHTML;
-                    btn.disabled = false;
-                });
-        });
-
         function showToast(message, type) {
             const container = document.querySelector('.message-container');
             const card = document.createElement('div');
@@ -1558,9 +1372,8 @@
             }, 5000);
         }
 
-        // Close modal when clicking outside
+        // --- Click outside to close models ---
         window.onclick = function (event) {
-            const transferModal = document.getElementById('transferModal');
             if (event.target == deleteModal) {
                 closeModal('deleteModal');
             } else if (event.target == addBookModal) {

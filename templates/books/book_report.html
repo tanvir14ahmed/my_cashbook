@@ -1,48 +1,150 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<link rel="icon" type="image/png" sizes="32x32" href="{% static 'mycashbook_logo.png' %}">
-<meta charset="UTF-8">
-<title>{{ book.name }} - Report</title>
-<style>
-body { font-family: 'Poppins', sans-serif; }
-h2, h3 { text-align: center; }
-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-th, td { border: 1px solid #333; padding: 8px; text-align: left; }
-th { background: #3498db; color: #fff; }
-.deposit { color: green; }
-.withdraw { color: red; }
-</style>
-</head>
-<body>
-<h2>{{ book.name }} - Transactions Report</h2>
-<h3>{{ start_date|date:"M d, Y" }} to {{ end_date|date:"M d, Y" }}</h3>
-<h3 style="text-align: right;">Total Balance: {{ total_balance|floatformat:2 }} ৳</h3>
 
-<table>
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Type</th>
-            <th>Amount</th>
-            <th>Running Balance</th>
-            <th>Note</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for t in transactions_with_running %}
-        <tr>
-            <td>{{ t.created_at|date:"M d, Y h:i A" }}</td>
-            <td class="{{ t.type }}">{{ t.type|capfirst }}</td>
-            <td class="{{ t.type }}">
-                {% if t.type == 'deposit' %}+{% else %}-{% endif %}{{ t.amount|floatformat:2 }}
-            </td>
-            <td>{{ t.running_balance|floatformat:2 }} ৳</td>
-            <td>{{ t.note|default:"-" }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<head>
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'mycashbook_logo.png' %}">
+    <meta charset="UTF-8">
+    <title>{{ book.name }} - Report</title>
+    <style>
+        :root {
+            /* Classic Metallic - Light Mode */
+            --brand-blue: #A38347; /* Gold */
+            --brand-purple: #8A6D3B; /* Deep Gold */
+            --brand-dark: #A38347;
+            --primary-color: #A38347; 
+            --primary-dark: #8A6D3B; 
+            --success-color: #4A8B58;
+            --error-color: #B83A42;
+            --danger-color: #B83A42;
+            --warning-color: #C0A062;
+            
+            --bg-color: #F4F4F5; /* Polished Silver */
+            --bg-gradient: #F4F4F5;
+            --text-color: #1C1C1E;
+            --text-main: #1C1C1E;
+            --text-dark: #1C1C1E;
+            --text-light: #8E8E93;
+            --text-muted: #8E8E93;
+            
+            --card-bg: #FFFFFF;
+            --container-bg: #FFFFFF;
+            --card-bg-opacity: 0.95;
+            --card-blur: 12px;
+            
+            --card-border: #D1D1D6;
+            --input-bg: #FFFFFF;
+            --input-border: #D1D1D6;
+            
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --light-gray: #E5E5EA;
+            --table-hover: #F4F4F5;
+            --title-gradient: #A38347;
+            --modal-overlay: rgba(0, 0, 0, 0.5);
+        }
+
+        body.dark-mode {
+            /* Classic Metallic - Dark Mode */
+            --brand-blue: #C0A062; /* Bright Gold */
+            --brand-purple: #A38347;
+            --brand-dark: #C0A062;
+            --primary-color: #C0A062; 
+            --primary-dark: #A38347; 
+            --success-color: #5B8A62;
+            --error-color: #C94A53;
+            --danger-color: #C94A53;
+            --warning-color: #D4AF37;
+            
+            --bg-color: #121214; /* Deep Titanium */
+            --bg-gradient: #121214;
+            --text-color: #E5E5EA;
+            --text-main: #E5E5EA;
+            --text-dark: #E5E5EA;
+            --text-light: #A1A1AA;
+            --text-muted: #A1A1AA;
+            
+            --card-bg: #1C1C1E; /* Gunmetal */
+            --container-bg: #1C1C1E;
+            
+            --card-border: #3A3A3C;
+            --input-bg: rgba(255, 255, 255, 0.05);
+            --input-border: #3A3A3C;
+            
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.6);
+            --light-gray: rgba(255, 255, 255, 0.05);
+            --table-hover: rgba(255, 255, 255, 0.1);
+            --title-gradient: #C0A062;
+            --modal-overlay: rgba(0, 0, 0, 0.8);
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        h2,
+        h3 {
+            text-align: center;
+            color: #4F46E5;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid rgba(39, 39, 42, 0.8);
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background: #4F46E5;
+            color: #FFFFFF;
+        }
+
+        .deposit {
+            color: #4F46E5;
+        }
+
+        .withdraw {
+            color: #EF4444;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>{{ book.name }} - Transactions Report</h2>
+    <h3>{{ start_date|date:"M d, Y" }} to {{ end_date|date:"M d, Y" }}</h3>
+    <h3 style="text-align: right;">Total Balance: {{ total_balance|floatformat:2 }} ৳</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Running Balance</th>
+                <th>Note</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in transactions_with_running %}
+            <tr>
+                <td>{{ t.created_at|date:"M d, Y h:i A" }}</td>
+                <td class="{{ t.type }}">{{ t.type|capfirst }}</td>
+                <td class="{{ t.type }}">
+                    {% if t.type == 'deposit' %}+{% else %}-{% endif %}{{ t.amount|floatformat:2 }}
+                </td>
+                <td>{{ t.running_balance|floatformat:2 }} ৳</td>
+                <td>{{ t.note|default:"-" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
+
 </html>
