@@ -6,6 +6,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'mycashbook_logo.png' %}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="View transaction history, manage books, and send money securely with MyCashBook.">
     <title>{{ book.name }} - Transactions</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -23,78 +24,85 @@
     </script>
     <style>
         :root {
-            /* Classic Metallic - Light Mode */
-            --brand-blue: #A38347; /* Gold */
-            --brand-purple: #8A6D3B; /* Deep Gold */
-            --brand-dark: #A38347;
-            --primary-color: #A38347; 
-            --primary-dark: #8A6D3B; 
-            --success-color: #4A8B58;
-            --error-color: #B83A42;
-            --danger-color: #B83A42;
-            --warning-color: #C0A062;
-            
-            --bg-color: #F4F4F5; /* Polished Silver */
+            /* Metallic Orange Touch - Light Mode */
+            --brand-blue: #F97316;
+            /* Orange */
+            --brand-purple: #EA580C;
+            /* Darker Orange */
+            --brand-dark: #F97316;
+            --primary-color: #F97316;
+            --primary-dark: #EA580C;
+            --success-color: #10B981;
+            --error-color: #EF4444;
+            --danger-color: #EF4444;
+            --warning-color: #FBBF24;
+
+            --bg-color: #F4F4F5;
+            /* Polished Silver */
             --bg-gradient: #F4F4F5;
             --text-color: #1C1C1E;
             --text-main: #1C1C1E;
             --text-dark: #1C1C1E;
             --text-light: #8E8E93;
             --text-muted: #8E8E93;
-            
+
             --card-bg: #FFFFFF;
             --container-bg: #FFFFFF;
             --card-bg-opacity: 0.95;
             --card-blur: 12px;
-            
+
             --card-border: #D1D1D6;
             --input-bg: #FFFFFF;
             --input-border: #D1D1D6;
-            
+
             --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
             --light-gray: #E5E5EA;
             --table-hover: #F4F4F5;
-            --title-gradient: #A38347;
+            --title-gradient: #F97316;
             --modal-overlay: rgba(0, 0, 0, 0.5);
         }
 
         body.dark-mode {
-            /* Classic Metallic - Dark Mode */
-            --brand-blue: #C0A062; /* Bright Gold */
-            --brand-purple: #A38347;
-            --brand-dark: #C0A062;
-            --primary-color: #C0A062; 
-            --primary-dark: #A38347; 
-            --success-color: #5B8A62;
-            --error-color: #C94A53;
-            --danger-color: #C94A53;
-            --warning-color: #D4AF37;
-            
-            --bg-color: #121214; /* Deep Titanium */
+            /* Metallic Orange Touch - Dark Mode */
+            --brand-blue: #FB923C;
+            /* Lighter Orange */
+            --brand-purple: #F97316;
+            --brand-dark: #FB923C;
+            --primary-color: #FB923C;
+            --primary-dark: #F97316;
+            --success-color: #34D399;
+            --error-color: #F87171;
+            --danger-color: #F87171;
+            --warning-color: #FCD34D;
+
+            --bg-color: #121214;
+            /* Deep Titanium */
             --bg-gradient: #121214;
             --text-color: #E5E5EA;
             --text-main: #E5E5EA;
             --text-dark: #E5E5EA;
             --text-light: #A1A1AA;
             --text-muted: #A1A1AA;
-            
-            --card-bg: #1C1C1E; /* Gunmetal */
+
+            --card-bg: #1C1C1E;
+            /* Gunmetal */
             --container-bg: #1C1C1E;
-            
+
             --card-border: #3A3A3C;
             --input-bg: rgba(255, 255, 255, 0.05);
             --input-border: #3A3A3C;
-            
+
             --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.6);
             --light-gray: rgba(255, 255, 255, 0.05);
             --table-hover: rgba(255, 255, 255, 0.1);
-            --title-gradient: #C0A062;
+            --title-gradient: #FB923C;
             --modal-overlay: rgba(0, 0, 0, 0.8);
         }
-        /* 1. CSS Variables & Reset */
-        
 
-        
+        /* 1. CSS Variables & Reset */
+
+
+
 
         * {
             margin: 0;
@@ -162,23 +170,29 @@
             margin-top: 1rem;
         }
 
+        .button,
         a.button {
             display: inline-flex;
             align-items: center;
-            padding: 0.5rem 1rem;
+            justify-content: center;
+            padding: 0.5rem 1.25rem;
             background: var(--primary-color);
             color: #FFFFFF;
             border-radius: 0.5rem;
             text-decoration: none;
             font-weight: 700;
-            transition: background 0.2s, transform 0.2s;
+            transition: all 0.2s;
             font-size: 0.875rem;
-            /* 14px */
+            border: none;
+            cursor: pointer;
+            gap: 0.5rem;
         }
 
+        .button:hover,
         a.button:hover {
             background: var(--primary-dark);
             transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
         }
 
         /* 3. Table Styling (Desktop/PC) */
@@ -674,12 +688,83 @@
         }
 
         .recipient-info-box {
-            background: rgba(79, 70, 229, 0.05);
+            background: rgba(249, 115, 22, 0.05);
             border: 1px dashed var(--primary-color);
             padding: 15px;
             border-radius: 12px;
             margin: 15px 0;
             text-align: left;
+        }
+
+        /* ----------------- TRANSFER ANIMATION ----------------- */
+        .loader-coin {
+            width: 80px;
+            height: 80px;
+            margin: 20px auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loader-coin i {
+            color: var(--primary-color);
+            font-size: 50px;
+            animation: bounce-coin 1s infinite ease-in-out;
+            filter: drop-shadow(0 0 10px rgba(249, 115, 22, 0.4));
+        }
+
+        .loader-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 4px dashed var(--primary-color);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: rotate-ring 3s infinite linear;
+        }
+
+        @keyframes bounce-coin {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+            }
+
+            50% {
+                transform: translateY(-15px) scale(1.1);
+            }
+        }
+
+        @keyframes rotate-ring {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .transfer-status-text {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: 0.5px;
+            margin-top: 15px;
+            animation: pulse-op 1.5s infinite;
+        }
+
+        @keyframes pulse-op {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
         }
 
         /* ----------------- MOBILE TRANSACTION CARDS ----------------- */
@@ -953,27 +1038,23 @@
 
         <!-- P2P Transfer Modal -->
         <div id="transferModal" class="modal">
-            <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-content">
                 <span class="close" id="closeTransferModal">&times;</span>
-                <h3 id="transferModalTitle"><i class="fas fa-paper-plane"></i> Send Money</h3>
-                <p style="font-size: 14px; color: var(--text-color); margin-bottom: 20px;">
+                <h2 id="transferModalTitle">Send Money</h2>
+
+                <p style="font-size: 14px; text-align: center; color: var(--text-muted); margin-bottom: 20px;">
                     From: <span id="senderBookName" style="color: var(--primary-color); font-weight: 700;">{{ book.name
                         }}</span>
                 </p>
 
                 <!-- Step 1: Find BID -->
                 <div id="transferStep1" class="transfer-step active">
-                    <label
-                        style="display: block; text-align: left; font-weight: 700; font-size: 14px; margin-bottom: 8px;">Enter
-                        Recipient BID:</label>
-                    <div style="position: relative;">
-                        <input type="text" id="recipientBidInput" placeholder="6-digit BID (e.g. 123456)" maxlength="6"
-                            style="width: 100%; margin-bottom: 15px; padding: 12px; border-radius: 8px;">
-                        <button id="validateBidBtn" class="button"
-                            style="width: 100%; margin-top: 5px; flex-grow: 1; justify-content: center;">
-                            Next: Verify Recipient <i class="fas fa-search" style="margin-left:5px;"></i>
-                        </button>
-                    </div>
+                    <label for="recipientBidInput">Enter Recipient BID:</label>
+                    <input type="text" id="recipientBidInput" placeholder="6-digit BID (e.g. 123456)" maxlength="6">
+
+                    <button id="validateBidBtn" class="button" style="width: 100%;">
+                        Next: Verify Recipient <i class="fas fa-search"></i>
+                    </button>
                 </div>
 
                 <!-- Step 2: Confirmation & Amount -->
@@ -982,28 +1063,35 @@
                         <p style="margin-bottom: 5px; color: var(--text-color);"><i class="fas fa-user-check"></i>
                             <b>Receiver:</b> <span id="recipientOwnerName"></span>
                         </p>
-                        <p style="margin-bottom: 0px; font-size: 13px; color: var(--light-gray);"><i
+                        <p style="margin-bottom: 0px; font-size: 13px; color: var(--text-muted);"><i
                                 class="fas fa-book"></i> <b>Book:</b> <span id="recipientBookName"></span></p>
                     </div>
 
-                    <label
-                        style="display: block; text-align: left; font-weight: 700; font-size: 14px; margin-top: 15px; margin-bottom: 8px;">Amount
-                        (TK):</label>
-                    <input type="number" id="transferAmount" step="0.01" placeholder="0.00"
-                        style="width: 100%; margin-bottom: 15px; padding: 12px; border-radius: 8px;">
+                    <label for="transferAmount">Amount (TK):</label>
+                    <input type="number" id="transferAmount" step="0.01" placeholder="0.00">
 
-                    <label
-                        style="display: block; text-align: left; font-weight: 700; font-size: 14px; margin-bottom: 8px;">Note
-                        (Optional):</label>
-                    <input type="text" id="transferNote" placeholder="e.g., Dinner, Loan return"
-                        style="width: 100%; margin-bottom: 20px; padding: 12px; border-radius: 8px;">
+                    <label for="transferNote">Note (Optional):</label>
+                    <input type="text" id="transferNote" placeholder="e.g., Dinner, Loan return">
 
                     <div class="action-group" style="justify-content: space-between; gap: 10px;">
                         <button type="button" class="button" onclick="goToStep(1)"
-                            style="background: rgba(255,255,255,0.1); color: var(--text-color); flex-grow: 1; justify-content: center;">Back</button>
+                            style="background: var(--light-gray); color: var(--text-color); flex-grow: 1;">Back</button>
                         <button id="executeTransferBtn" class="button"
-                            style="background: var(--success-color); color: #FFFFFF; flex-grow: 2; justify-content: center;">Confirm
-                            & Send <i class="fas fa-check-circle" style="margin-left:5px;"></i></button>
+                            style="background: var(--success-color); color: #FFFFFF; flex-grow: 2;">Confirm
+                            & Send <i class="fas fa-check-circle"></i></button>
+                    </div>
+                </div>
+
+                <!-- Step Loading: Soothing Animation -->
+                <div id="transferStepLoading" class="transfer-step">
+                    <div style="padding: 40px 20px; text-align: center;">
+                        <div class="loader-coin">
+                            <div class="loader-ring"></div>
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <p class="transfer-status-text">Transferring Money...</p>
+                        <p style="color: var(--text-muted); font-size: 13px; margin-top: 5px;">Security verification in
+                            progress</p>
                     </div>
                 </div>
 
@@ -1149,6 +1237,7 @@
         // Transfer Modal Functions
         function openTransferModal() {
             modals.transfer.classList.add('show');
+            document.getElementById('senderBookName').textContent = '{{ book.name }}';
             goToStep(1);
         }
 
@@ -1225,13 +1314,18 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    this.innerHTML = 'Confirm & Send <i class="fas fa-check-circle" style="margin-left:5px;"></i>';
-                    this.disabled = false;
-
                     if (data.success) {
-                        document.getElementById('transferSuccessMsg').textContent = `Successfully sent ${parseFloat(amount).toFixed(2)} TK to ${document.getElementById('recipientOwnerName').textContent}`;
-                        goToStep(3);
+                        goToStep('Loading'); // Show soothing animation
+
+                        setTimeout(() => {
+                            this.innerHTML = 'Confirm & Send <i class="fas fa-check-circle" style="margin-left:5px;"></i>';
+                            this.disabled = false;
+                            document.getElementById('transferSuccessMsg').textContent = `Successfully sent ${parseFloat(amount).toFixed(2)} TK to ${document.getElementById('recipientOwnerName').textContent}`;
+                            goToStep(3);
+                        }, 1200); // 1.2s of soothing animation
                     } else {
+                        this.innerHTML = 'Confirm & Send <i class="fas fa-check-circle" style="margin-left:5px;"></i>';
+                        this.disabled = false;
                         alert(data.message || "Transfer failed.");
                     }
                 })
