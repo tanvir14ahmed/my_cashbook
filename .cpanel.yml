@@ -1,12 +1,18 @@
----
-version: 2
-targets:
-  cpanel:
-    - path: /
-      type: python
-      python_version: python3.12
-      entry_point: manage.py
-      requirements_file: requirements.txt
-      post_deploy:
-        - python3.12 manage.py migrate
-        - python3.12 manage.py collectstatic --noinput 
+deployment:
+  tasks:
+    # Activate your Python virtual environment
+    - export VENV=/home/codelabb/virtualenvs/my_cashbook/3.12.3/bin/activate
+    - source $VENV
+
+    # Set deployment path
+    - export DEPLOYPATH=/home/codelabb/repositories/my_cashbook
+
+    # Copy all files to deployment path
+    - /bin/cp -R * $DEPLOYPATH
+
+    # Change directory to app root
+    - cd $DEPLOYPATH
+
+    # Run migrations and collect static files
+    - python manage.py migrate
+    - python manage.py collectstatic --noinput
