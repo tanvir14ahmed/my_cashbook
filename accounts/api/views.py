@@ -137,12 +137,14 @@ class ProfileView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
+        # Ensure profile exists for existing users
+        Profile.objects.get_or_create(user=request.user, defaults={'display_name': request.user.username})
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
 
     def patch(self, request):
         """Update display_name and/or timezone."""
-        profile = request.user.profile
+        profile, _ = Profile.objects.get_or_create(user=request.user, defaults={'display_name': request.user.username})
         serializer = UpdateProfileSerializer(profile, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
