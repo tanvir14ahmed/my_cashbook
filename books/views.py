@@ -271,8 +271,11 @@ def delete_transaction_view(request, book_id, transaction_id):
         return redirect('book_detail', book_id=book.id)
     
 
-@login_required
 def transaction_report_pdf(request, book_id):
+    if not request.user.is_authenticated:
+        from django.http import HttpResponseForbidden
+        return HttpResponseForbidden("You must be logged in to view this report.")
+
     # Authorize book access
     book = get_object_or_404(Book, id=book_id, user=request.user)
 

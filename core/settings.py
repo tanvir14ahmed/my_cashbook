@@ -107,8 +107,8 @@ DATABASES = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'codelabb_mycashbook_db_test',     # full DB name from cPanel
-        'USER': 'codelabb_tanvir_user_test',            # full DB username from cPanel
+        'NAME': 'codelabb_mycashbook_db',     # full DB name from cPanel
+        'USER': 'codelabb_tanvir_user',            # full DB username from cPanel
         'PASSWORD': 'Lifeis1*exam',
         'HOST': 'localhost',  # usually yourdomain.com or server IP
         'PORT': '3306',

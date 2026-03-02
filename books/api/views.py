@@ -54,6 +54,15 @@ class BookViewSet(viewsets.ModelViewSet):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @action(detail=True, methods=['get'])
+    def report(self, request, pk=None):
+        """
+        GET /api/v1/books/{id}/report/
+        Returns the PDF report for the book.
+        """
+        from .views import transaction_report_pdf
+        return transaction_report_pdf(request, pk)
+
 
 # ─────────────────────────────────────────────
 # TRANSACTION ViewSet (edit / delete individual transactions)
