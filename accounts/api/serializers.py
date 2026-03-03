@@ -32,12 +32,29 @@ class UserSerializer(serializers.ModelSerializer):
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
+    username = serializers.CharField(required=False)
 
     class Meta:
         model = PendingUser
-        # FIX: Added 'display_name' — required for Flutter sign-up form
-        fields = ['username', 'email', 'password', 'display_name', 'timezone']
+        fields = ['email', 'password', 'display_name', 'timezone', 'username']
 
+    def create(self, validated_data):
+        email = validated_data.get('email')
+        # Auto-generate username from email prefix
+        base_username = email.split('@')[0].lower()
+        import random
+        import string
+        
+        # Ensure it's unique enough for PendingUser
+        random_suffix = ''.join(random.choices(string.ascii_lowercase + string.digits, k=4))
+        username = f"{base_username}_{random_suffix}"
+        
+        validated_data['username'] = username
+        otp = str(random.randint(100000, 999999))
+        validated_data['otp'] = otp
+        
+        pending_user = super().create(validated_data)
+        
         from django.core.mail import EmailMultiAlternatives
         from django.utils.html import strip_tags
 
