@@ -109,39 +109,52 @@ class ResendOTPView(views.APIView):
             pending.created_at = timezone.now()
             pending.save()
 
+            from django.core.mail import EmailMultiAlternatives
+            from django.utils.html import strip_tags
+
+            subject = "MyCashBook — Resend OTP"
+            text_content = f"Hi {pending.display_name}, your new MyCashBook verification code is: {new_otp}"
+            
             html_content = f"""
             <!DOCTYPE html>
             <html>
             <head>
                 <meta charset="utf-8">
-                <title>MyCashBook OTP Verification</title>
+                <style>
+                    .container {{ font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }}
+                    .header {{ background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%); padding: 40px 20px; text-align: center; }}
+                    .content {{ padding: 40px; color: #333333; line-height: 1.6; }}
+                    .otp-box {{ background-color: #f8f9fa; border: 2px dashed #e0e0e0; border-radius: 12px; padding: 20px; text-align: center; margin: 30px 0; }}
+                    .otp-code {{ font-size: 36px; font-weight: bold; color: #ff9800; letter-spacing: 4px; }}
+                    .footer {{ background-color: #f8f9fa; padding: 20px; text-align: center; font-size: 12px; color: #999999; }}
+                    .logo {{ color: #ffffff; font-size: 24px; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }}
+                </style>
             </head>
-            <body style="font-family: Arial, sans-serif; background-color: #f7f7f7; padding: 20px;">
-                <div style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-                    <h2 style="color: #333333; text-align: center;">MyCashBook OTP Resend</h2>
-                    <p>Hi <strong>{pending.display_name}</strong>,</p>
-                    <p>You requested a new OTP to verify your <strong>MyCashBook</strong> account. Use the OTP below to complete your signup:</p>
-                    <p style="text-align: center; font-size: 28px; font-weight: bold; color: #E74C3C; letter-spacing: 2px; margin: 30px 0;">
-                        {new_otp}
-                    </p>
-                    <p style="font-size: 14px; color: #555555;">This OTP is valid for <strong>10 minutes</strong>. Do not share it with anyone.</p>
-                    <hr style="border: none; border-top: 1px solid #eeeeee; margin: 20px 0;">
-                    <p style="font-size: 12px; color: #999999; text-align: center;">
-                        MyCashBook – Track your expenses wisely<br>
-                        &copy; {timezone.now().year} MyCashBook. All rights reserved.
-                    </p>
+            <body style="margin: 0; padding: 20px; background-color: #f4f4f4;">
+                <div class="container">
+                    <div class="header">
+                        <div class="logo">MyCashBook</div>
+                        <div style="color: #ff9800; font-size: 14px; font-weight: 500;">PREMIUM EXPENSE TRACKING</div>
+                    </div>
+                    <div class="content">
+                        <h2 style="margin-top: 0; color: #1a1a1a;">Verification Code Resent</h2>
+                        <p>Hi <strong>{pending.display_name}</strong>,</p>
+                        <p>You requested a new verification code for your MyCashBook account. Use the code below to complete your registration:</p>
+                        <div class="otp-box">
+                            <div class="otp-code">{new_otp}</div>
+                        </div>
+                        <p style="font-size: 14px; color: #666666;">This code is valid for <strong>10 minutes</strong>. If you didn't request this, please ignore this email.</p>
+                    </div>
+                    <div class="footer">
+                        <p>&copy; {timezone.now().year} MyCashBook. All rights reserved.</p>
+                    </div>
                 </div>
             </body>
             </html>
             """
-            send_mail(
-                "MyCashBook — Resend OTP",
-                f"Your new OTP is {new_otp}. It expires in 10 minutes.",
-                settings.DEFAULT_FROM_EMAIL,
-                [email],
-                fail_silently=True,
-                html_message=html_content,
-            )
+            msg = EmailMultiAlternatives(subject, text_content, settings.DEFAULT_FROM_EMAIL, [email])
+            msg.attach_alternative(html_content, "text/html")
+            msg.send(fail_silently=True)
             return Response({"message": "New OTP sent to your email."})
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -221,39 +234,52 @@ class ForgotPasswordView(views.APIView):
             user_profile.otp_created_at = timezone.now()
             user_profile.save()
 
+            from django.core.mail import EmailMultiAlternatives
+            from django.utils.html import strip_tags
+
+            subject = "MyCashBook — Password Reset Request"
+            text_content = f"Hi {user.username}, your MyCashBook password reset code is: {otp}"
+            
             html_content = f"""
             <!DOCTYPE html>
             <html>
             <head>
                 <meta charset="utf-8">
-                <title>MyCashBook Password Reset OTP</title>
+                <style>
+                    .container {{ font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }}
+                    .header {{ background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%); padding: 40px 20px; text-align: center; }}
+                    .content {{ padding: 40px; color: #333333; line-height: 1.6; }}
+                    .otp-box {{ background-color: #f8f9fa; border: 2px dashed #e0e0e0; border-radius: 12px; padding: 20px; text-align: center; margin: 30px 0; }}
+                    .otp-code {{ font-size: 36px; font-weight: bold; color: #e74c3c; letter-spacing: 4px; }}
+                    .footer {{ background-color: #f8f9fa; padding: 20px; text-align: center; font-size: 12px; color: #999999; }}
+                    .logo {{ color: #ffffff; font-size: 24px; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }}
+                </style>
             </head>
-            <body style="font-family: Arial, sans-serif; background-color: #f7f7f7; padding: 20px;">
-                <div style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-                    <h2 style="color: #333333; text-align: center;">Password Reset Request</h2>
-                    <p>Hi <strong>{user.username}</strong>,</p>
-                    <p>We received a request to reset your <strong>MyCashBook</strong> password. Use the OTP below to reset your password:</p>
-                    <p style="text-align: center; font-size: 28px; font-weight: bold; color: #E74C3C; letter-spacing: 2px; margin: 30px 0;">
-                        {otp}
-                    </p>
-                    <p style="font-size: 14px; color: #555555;">This OTP is valid for <strong>10 minutes</strong>. Do not share it with anyone.</p>
-                    <hr style="border: none; border-top: 1px solid #eeeeee; margin: 20px 0;">
-                    <p style="font-size: 12px; color: #999999; text-align: center;">
-                        MyCashBook – Track your expenses wisely<br>
-                        &copy; {timezone.now().year} MyCashBook. All rights reserved.
-                    </p>
+            <body style="margin: 0; padding: 20px; background-color: #f4f4f4;">
+                <div class="container">
+                    <div class="header">
+                        <div class="logo">MyCashBook</div>
+                        <div style="color: #ff9800; font-size: 14px; font-weight: 500;">PREMIUM EXPENSE TRACKING</div>
+                    </div>
+                    <div class="content">
+                        <h2 style="margin-top: 0; color: #1a1a1a;">Password Reset</h2>
+                        <p>Hi <strong>{user.username}</strong>,</p>
+                        <p>We received a request to reset your MyCashBook password. Please use the following code to proceed:</p>
+                        <div class="otp-box">
+                            <div class="otp-code">{otp}</div>
+                        </div>
+                        <p style="font-size: 14px; color: #666666;">This code is valid for <strong>10 minutes</strong>. If you did not request a password reset, please secure your account.</p>
+                    </div>
+                    <div class="footer">
+                        <p>&copy; {timezone.now().year} MyCashBook. All rights reserved.</p>
+                    </div>
                 </div>
             </body>
             </html>
             """
-            send_mail(
-                "MyCashBook — Password Reset OTP",
-                f"Your password reset OTP is {otp}. It expires in 10 minutes.",
-                settings.DEFAULT_FROM_EMAIL,
-                [email],
-                fail_silently=True,
-                html_message=html_content,
-            )
+            msg = EmailMultiAlternatives(subject, text_content, settings.DEFAULT_FROM_EMAIL, [email])
+            msg.attach_alternative(html_content, "text/html")
+            msg.send(fail_silently=True)
             return Response({"message": "If this email exists, an OTP has been sent."})
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
