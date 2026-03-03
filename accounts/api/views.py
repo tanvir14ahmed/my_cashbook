@@ -109,12 +109,38 @@ class ResendOTPView(views.APIView):
             pending.created_at = timezone.now()
             pending.save()
 
+            html_content = f"""
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="utf-8">
+                <title>MyCashBook OTP Verification</title>
+            </head>
+            <body style="font-family: Arial, sans-serif; background-color: #f7f7f7; padding: 20px;">
+                <div style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <h2 style="color: #333333; text-align: center;">MyCashBook OTP Resend</h2>
+                    <p>Hi <strong>{pending.display_name}</strong>,</p>
+                    <p>You requested a new OTP to verify your <strong>MyCashBook</strong> account. Use the OTP below to complete your signup:</p>
+                    <p style="text-align: center; font-size: 28px; font-weight: bold; color: #E74C3C; letter-spacing: 2px; margin: 30px 0;">
+                        {new_otp}
+                    </p>
+                    <p style="font-size: 14px; color: #555555;">This OTP is valid for <strong>10 minutes</strong>. Do not share it with anyone.</p>
+                    <hr style="border: none; border-top: 1px solid #eeeeee; margin: 20px 0;">
+                    <p style="font-size: 12px; color: #999999; text-align: center;">
+                        MyCashBook – Track your expenses wisely<br>
+                        &copy; {timezone.now().year} MyCashBook. All rights reserved.
+                    </p>
+                </div>
+            </body>
+            </html>
+            """
             send_mail(
                 "MyCashBook — Resend OTP",
                 f"Your new OTP is {new_otp}. It expires in 10 minutes.",
                 settings.DEFAULT_FROM_EMAIL,
                 [email],
                 fail_silently=True,
+                html_message=html_content,
             )
             return Response({"message": "New OTP sent to your email."})
 
@@ -195,12 +221,38 @@ class ForgotPasswordView(views.APIView):
             user_profile.otp_created_at = timezone.now()
             user_profile.save()
 
+            html_content = f"""
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="utf-8">
+                <title>MyCashBook Password Reset OTP</title>
+            </head>
+            <body style="font-family: Arial, sans-serif; background-color: #f7f7f7; padding: 20px;">
+                <div style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <h2 style="color: #333333; text-align: center;">Password Reset Request</h2>
+                    <p>Hi <strong>{user.username}</strong>,</p>
+                    <p>We received a request to reset your <strong>MyCashBook</strong> password. Use the OTP below to reset your password:</p>
+                    <p style="text-align: center; font-size: 28px; font-weight: bold; color: #E74C3C; letter-spacing: 2px; margin: 30px 0;">
+                        {otp}
+                    </p>
+                    <p style="font-size: 14px; color: #555555;">This OTP is valid for <strong>10 minutes</strong>. Do not share it with anyone.</p>
+                    <hr style="border: none; border-top: 1px solid #eeeeee; margin: 20px 0;">
+                    <p style="font-size: 12px; color: #999999; text-align: center;">
+                        MyCashBook – Track your expenses wisely<br>
+                        &copy; {timezone.now().year} MyCashBook. All rights reserved.
+                    </p>
+                </div>
+            </body>
+            </html>
+            """
             send_mail(
                 "MyCashBook — Password Reset OTP",
                 f"Your password reset OTP is {otp}. It expires in 10 minutes.",
                 settings.DEFAULT_FROM_EMAIL,
                 [email],
                 fail_silently=True,
+                html_message=html_content,
             )
             return Response({"message": "If this email exists, an OTP has been sent."})
 

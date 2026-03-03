@@ -44,13 +44,38 @@ class RegisterSerializer(serializers.ModelSerializer):
         pending_user = PendingUser.objects.create(**validated_data)
 
         subject = "MyCashBook Email Verification OTP"
-        message = f"Your OTP is {otp}. It expires in 10 minutes."
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <title>MyCashBook OTP Verification</title>
+        </head>
+        <body style="font-family: Arial, sans-serif; background-color: #f7f7f7; padding: 20px;">
+            <div style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                <h2 style="color: #333333; text-align: center;">MyCashBook Account Verification</h2>
+                <p>Hi <strong>{pending_user.display_name}</strong>,</p>
+                <p>Thank you for signing up for <strong>MyCashBook</strong>! To complete your registration, please use the OTP below:</p>
+                <p style="text-align: center; font-size: 28px; font-weight: bold; color: #2E86C1; letter-spacing: 2px; margin: 30px 0;">
+                    {otp}
+                </p>
+                <p style="font-size: 14px; color: #555555;">This OTP is valid for <strong>10 minutes</strong>. Please do not share it with anyone.</p>
+                <hr style="border: none; border-top: 1px solid #eeeeee; margin: 20px 0;">
+                <p style="font-size: 12px; color: #999999; text-align: center;">
+                    MyCashBook – Track your expenses wisely<br>
+                    &copy; {timezone.now().year} MyCashBook. All rights reserved.
+                </p>
+            </div>
+        </body>
+        </html>
+        """
         send_mail(
             subject,
-            message,
+            f"Your OTP is {otp}",
             settings.DEFAULT_FROM_EMAIL,
             [pending_user.email],
             fail_silently=True,
+            html_message=html_content,
         )
         return pending_user
 
