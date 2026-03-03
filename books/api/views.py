@@ -60,7 +60,7 @@ class BookViewSet(viewsets.ModelViewSet):
         GET /api/v1/books/{id}/report/
         Returns the PDF report for the book.
         """
-        from .views import transaction_report_pdf
+        from ..views import transaction_report_pdf
         return transaction_report_pdf(request, pk)
 
 

@@ -283,8 +283,12 @@ def transaction_report_pdf(request, book_id):
     end_date_str = request.GET.get('end')
 
     # Set Dhaka timezone for current time references
-    dhaka_tz = pytz.timezone('Asia/Dhaka')
-    now_dhaka = timezone.now().astimezone(dhaka_tz)
+    try:
+        import pytz
+        dhaka_tz = pytz.timezone('Asia/Dhaka')
+        now_dhaka = timezone.now().astimezone(dhaka_tz)
+    except:
+        now_dhaka = timezone.now()
 
     # --- UPDATED DATE HANDLING LOGIC START ---
     
