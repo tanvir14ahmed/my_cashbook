@@ -38,6 +38,12 @@ class RegisterSerializer(serializers.ModelSerializer):
         model = PendingUser
         fields = ['email', 'password', 'display_name', 'timezone', 'username']
 
+    def validate_email(self, value):
+        from django.contrib.auth.models import User
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("A user with this email already exists.")
+        return value
+
     def create(self, validated_data):
         email = validated_data.get('email')
         # Auto-generate username from email prefix
