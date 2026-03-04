@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-)kl1-qv0g^qk2r#7zuix6&y(ob_ka6-8^-8k_r^xb-(6f8&$45'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*', '192.168.0.180', 'www.codelab-by-tnv.top', 'codelab-by-tnv.top']
+ALLOWED_HOSTS = ['localhost', 'www.codelab-by-tnv.top', 'codelab-by-tnv.top', 'www.mycashbook.codelab-by-tnv.top']
 
 CORS_ALLOW_ALL_ORIGINS = True # Necessary for mobile/external API access
 
