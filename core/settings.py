@@ -95,20 +95,20 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-'''
-DATABASES = {
+
+""" DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
-}
-'''
+} """
+
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'codelabb_mycashbook_db',     # full DB name from cPanel
-        'USER': 'codelabb_tanvir_user',            # full DB username from cPanel
+        'NAME': 'codelabb_mycashbook_db_test',     # full DB name from cPanel
+        'USER': 'codelabb_tanvir_user_test',            # full DB username from cPanel
         'PASSWORD': 'Lifeis1*exam',
         'HOST': 'localhost',  # usually yourdomain.com or server IP
         'PORT': '3306',
